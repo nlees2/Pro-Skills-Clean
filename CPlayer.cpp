@@ -5,7 +5,6 @@
 
 CPlayer::CPlayer(float frameTime, I3DEngine* myEngine)
 {
-
 	dummyMesh = myEngine->LoadMesh("dummy.x");
 	playerDummy = dummyMesh->CreateModel(0.0f, 10.0f, 0.0f);
 
@@ -142,7 +141,7 @@ bool CPlayer::raycastShoot(vector3D facingVector, vector3D dummyPosition, vector
 			if (target[i].currentTargetState == ready)
 			{
 
-				hitObject = SphereToBox(testPointX, testPointY + 22.0, testPointZ, target[i].xSize, target[i].ySize, target[i].zSize, target[i].xPosition, target[i].yPosition, target[i].zPosition, 0.05f);
+				hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, target[i].xSize, target[i].ySize, target[i].zSize, target[i].xPosition, target[i].yPosition, target[i].zPosition, 0.05f);
 				if (hitObject)
 				{
 					bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
@@ -204,7 +203,7 @@ bool CPlayer::raycastWall(vector3D facingVector, vector3D dummyPosition, vector<
 			testPointZ += rayTrace.z;
 
 
-			hitObject = SphereToBox(testPointX, testPointY, testPointZ, wall[i].xSize, wall[i].ySize, wall[i].zSize, wall[i].XPos, wall[i].YPos, wall[i].ZPos, 0.05f);
+			hitObject = SphereToBox2(testPointX, testPointY, testPointZ, wall[i].xSize, wall[i].ySize, wall[i].zSize, wall[i].XPos, wall[i].YPos, wall[i].ZPos, 0.05f);
 			if (hitObject)
 			{
 				bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
@@ -220,6 +219,61 @@ bool CPlayer::raycastWall(vector3D facingVector, vector3D dummyPosition, vector<
 		////////////////////////////////////////
 
 	}
+	return false;
+}
+bool CPlayer::raycastMenu(vector3D facingVector, vector3D dummyPosition, IModel* &target, IModel* bulletTracer, CPlayer myplayer)
+{
+
+	//int gunDamage = 1;
+	//float fireRate = 0.25f;
+	float weaponRange = 200.0f;  // the distance that the ray will travel, longer range means more calculations
+								 //float hitForce = 100.0f;
+	bool hitWall = false;
+	bool hitObject = false;      // bool to see if an object was hit
+	float distToObject = 1.0f;	 // the value incremented for the ray trace (how far the ray travels before being checked) 
+
+
+	float testPointX;
+	float testPointY;
+	float testPointZ;
+
+	vector3D rayTrace;
+
+
+	rayTrace.x = facingVector.x * distToObject;
+	rayTrace.y = facingVector.y * distToObject;
+	rayTrace.z = (facingVector.z * distToObject);
+
+	testPointX = dummyPosition.x + rayTrace.x;
+	testPointY = dummyPosition.y + rayTrace.y;
+	testPointZ = dummyPosition.z + rayTrace.z;
+
+	
+
+		for (distToObject = 0; distToObject < weaponRange; distToObject++)
+			//while (!hitObject && distToObject < rayLength)
+		{
+			//distToObject += 1.0f;
+			testPointX += rayTrace.x;
+			testPointY += rayTrace.y;
+			testPointZ += rayTrace.z;
+
+			hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, 10.0f, 10.0f, 1.0f, target->GetX(), target->GetY(), target->GetZ(), 0.05f);
+			if (hitObject)
+			{
+				bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
+				return true;
+			}
+			
+
+		}
+
+		testPointX = dummyPosition.x + rayTrace.x;
+		testPointY = dummyPosition.y + rayTrace.y;
+		testPointZ = dummyPosition.z + rayTrace.z;
+		////////////////////////////////////////
+
+	
 	return false;
 }
 
@@ -245,7 +299,7 @@ collisionSide CPlayer::SphereToBox(float playerX, float playerZ, float cubeXLeng
 
 }
 
-bool CPlayer::SphereToBox(float pointX, float pointY, float pointZ, float cubeXLength, float cubeYLength, float cubeZLength, float cubeXPos, float cubeYPos, float cubeZPos, float sphereRadius)
+bool CPlayer::SphereToBox2(float pointX, float pointY, float pointZ, float cubeXLength, float cubeYLength, float cubeZLength, float cubeXPos, float cubeYPos, float cubeZPos, float sphereRadius)
 {
 	float minX = cubeXPos - (cubeXLength / 2.0f);
 	float maxX = cubeXPos + (cubeXLength / 2.0f);
@@ -307,4 +361,70 @@ void CPlayer::ResolveCollisionReverse(CPlayer myPlayer, collisionSide collision)
 	{
 		myPlayer.playerDummy->SetX(playerOldX - 0.15f); // moves teh player left
 	}
+}
+
+void CPlayer::LoadHighScore(vector<highScore> &highScores)
+{
+	float scoreTemp;
+	string nameTemp;
+
+	highScore playerScore;
+
+	ifstream fileInput;
+	fileInput.open("highscores.txt"); // opens the input file
+
+	if (fileInput.is_open()) // Checks to see that the file has been opened sucessfully
+	{
+		//int highScoreQty = highScores.size();
+		for (int i = 0; i < NUMBEROFHIGHSCORES; i++)
+		{
+			fileInput >> nameTemp;
+
+			if (nameTemp == "")
+			{
+				nameTemp = "unknown";
+			}
+
+			fileInput >> scoreTemp;
+
+			playerScore.score = scoreTemp;
+			playerScore.name = nameTemp;
+
+			highScores.push_back(playerScore);
+		}
+
+	}
+
+}
+
+void CPlayer::SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer)
+{
+	ofstream fileInput;
+	fileInput.open("highscores.txt"); // opens the input file
+	if (highScores.size() >= 10)
+	{
+		highScores.pop_back();
+	}
+	highScore playerScore;
+	playerScore.name = currentPlayer.name;
+	playerScore.score = currentPlayer.score;
+	highScores.push_back(playerScore);
+	sort(highScores.begin(), highScores.end(), compare);
+
+	if(fileInput.is_open()) // Checks to see that the file has been opened sucessfully
+	{
+		int highScoreQty = highScores.size();
+
+		for (int i = 0; i < highScoreQty; i++)
+		{
+			if (highScores[i].name == "")
+			{
+				highScores[i].name = "unknown";
+			}
+
+			fileInput << highScores[i].name << " " << highScores[i].score << endl;;;
+		}
+
+	}
+
 }

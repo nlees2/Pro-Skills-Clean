@@ -27,6 +27,6 @@ public:
 	~CWeapon();
 	void createWeapon(I3DEngine* myEngine, int maxAmmoValue, bool autofireValue, float fireRateValue, weaponState currentWeaponStateValue, string meshName, CPlayer myPlayer, float weaponStartingY);
 	void fireWeapon();
-	void reloadWeapon(CWeapon &currentWeapon, float frameTime, CAmmoClip mapAmmoClip[], int currentAmmoClip);
+	void reloadWeapon(CWeapon &currentWeapon, float frameTime, CAmmoClip &mapAmmoClip, int &currentAmmoClip);
 	void selectWeapon();
 };

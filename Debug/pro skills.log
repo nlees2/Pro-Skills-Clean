@@ -1,17 +1,17 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (pro skills rebuilt.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (pro skills rebuilt.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   pro skills.cpp
-d:\cyorke\desktop\pro skills cleaned\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
-d:\cyorke\desktop\pro skills cleaned\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(103): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(174): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(177): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(426): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(440): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(500): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(135): warning C4101: 'crate': unreferenced local variable
-d:\cyorke\desktop\pro skills cleaned\pro skills.cpp(118): warning C4101: 'mouseMovement': unreferenced local variable
-  pro skills.vcxproj -> D:\cyorke\Desktop\Pro Skills cleaned\\pro skillsDebug.exe
+c:\users\nick\desktop\pro-skills-clean-master\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+c:\users\nick\desktop\pro-skills-clean-master\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(106): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(183): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(186): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(269): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(468): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(482): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(542): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(143): warning C4101: 'crate': unreferenced local variable
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(123): warning C4101: 'mouseMovement': unreferenced local variable
+  pro skills.vcxproj -> C:\Users\Nick\Desktop\Pro-Skills-Clean-master\\pro skillsDebug.exe
   Copying DLLs & shaders...

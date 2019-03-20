@@ -258,3 +258,7 @@ int nextInArray(int i, int arraySize) // Function to select the next point in a 
 //		player.animationTimer = 0.1f;
 //	}
 //}
+bool compare(const highScore& a, const  highScore& b)
+{
+	return (a.score > b.score);
+}

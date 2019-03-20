@@ -100,3 +100,4 @@ void readMap(int &numberOfWalls, int &numberOfBoxes, int & numberOfTargets, int 
 void weaponAnimation(float &animationTimer, IModel* M4Colt, IModel* player, float frameTime);
 void desertEagleAnimation(float &animationTimer, IModel* desertEagle, IModel* player, float frameTime);
 int nextInArray(int i, int arraySize);
+bool compare(const highScore& a, const  highScore& b);

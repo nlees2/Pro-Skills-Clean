@@ -1,0 +1,10 @@
+Nick 11
+Nick 7
+Nick 5
+Nick 2
+Nick 1
+Nick 1
+Nick 1
+Nick 1
+Unknown 0
+Nick 0

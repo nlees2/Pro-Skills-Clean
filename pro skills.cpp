@@ -34,6 +34,8 @@ void main()
 	playerState currentPlayerState = playing;
 	activeWeapon currentActiveWeapon = M4ColtWeapon;
 
+	vector<highScore> highScores;
+
 	CWeapon M4Colt;
 	CWeapon desertEagle;
 	CWeapon currentWeapon;
@@ -63,6 +65,7 @@ void main()
 	stringstream ammoText; // screen ammo output
 	stringstream reloadText; // screen reload output
 	stringstream timeText;  // screen timer output
+	stringstream highScoreText; // high score output
 	stringstream fpsText;   // screen fps output
 	ISprite* crosshair;     // players crosshair
 
@@ -112,8 +115,10 @@ void main()
 	int time = 120;						  // amount of time the player has in the game
 	int minutes;						  // number of minutes remaining in time (time / 60)
 	int seconds;						  // number of seconds in time			 (time % 60)
+	bool highScoreDisplay = false;
 
 	IFont* myFont = myEngine->LoadFont("Comic Sans MS", 36); // Declares the font and font size used when outputting text
+	IFont* highScoreFont = myEngine->LoadFont("Comic Sans MS", 80); // Declares the font and font size used when outputting text
 
 	float mouseMovement;				 // stores the players mouse movemnt
 	myEngine->StartMouseCapture();		 // starts mouse capture, removing the mouse curser and allowing the player full control of the game
@@ -130,6 +135,9 @@ void main()
 	IMesh* bulletMesh = myEngine->LoadMesh("Bullet.x");
 	IModel* floor = floorMesh->CreateModel(0.0f, 0.0f, 0.0f);			// Creates the floor model
 	IModel* spawnDummy = DummyMesh->CreateModel(0.0f, 00.0f, 0.0f);		// created the spawn location dummy (used to create the box collision for the target range enclosure)
+	IModel* highSCoreBox = cubeMesh->CreateModel(20.0f, 5.0f, 54.0f);
+
+	highSCoreBox->SetSkin("highScores.jpg");
 
 																		//desertEagle.model = desertEagleMesh->CreateModel(0.0f, -5.0f, 0.0f);// Creates the Desert Eagle (under the map)
 	IModel* crate[kCrateQuantity];										// Declares the wooden crate models
@@ -144,6 +152,7 @@ void main()
 
 	 //reads in the map file
 	readMap(numberOfWalls, numberOfBoxes, numberOfTargets, numberOfWallBoxes, mapWall, mapWallBox, mapBox, mapTarget, mapName);
+	myPlayer.LoadHighScore(highScores);
 
 	// creates the models for bullet tracers
 	for (int i = 0; i < kNumBulletTracers; i++)
@@ -252,6 +261,16 @@ void main()
 		myFont->Draw(fpsText.str(), 200, 20);
 		fpsText.str("");
 
+		if (highScoreDisplay == true)
+		{
+			for (int i = 0; i < NUMBEROFHIGHSCORES; i++)
+			{
+				highScoreText << i + 1 << ". " << highScores[i].name << " " << highScores[i].score;
+				highScoreFont->Draw(highScoreText.str(), 50.0f, i * 80.0f + 100.0f);
+				highScoreText.str("");
+			}
+		}
+
 		// Draw the scene
 		myEngine->DrawScene();
 
@@ -294,6 +313,7 @@ void main()
 
 		if (myEngine->KeyHit(kQuitKey)) //Quits the game
 		{
+			myPlayer.SaveHighScore(highScores, myPlayer);
 			myEngine->Stop();
 		}
 
@@ -341,8 +361,18 @@ void main()
 				currentWeapon.animationTimer = 0.1f;	// sets the weapons animation timer to 0.1 seconds
 			}
 
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
+			{
+				highScoreDisplay = false;
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer))
+			{
+				highScoreDisplay = true;
+			}
 
 		}
+
+	
 
 		// for automatic fire weapons
 		if (myEngine->KeyHeld(kFireKey) && currentWeapon.fireRateTimer <= 0.0f && currentWeapon.autofireEnabled == true)		//////////////////////// automatic firing
@@ -386,7 +416,14 @@ void main()
 				currentWeapon.ammo -= 1;   // removes 1 bullet from the ammo clip
 				currentWeapon.animationTimer = 0.1f;	 // sets the weapons animation timer to 0.1 seconds
 			}
-
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
+			{
+				highScoreDisplay = false;
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer))
+			{
+				highScoreDisplay = true;
+			}
 		}
 
 		currentWeapon.fireRateTimer -= frameTime;    // counts down the fire rate timer, controlling the time between shots
@@ -406,10 +443,18 @@ void main()
 		////////////////////////////// Weapon reloading
 		if (currentWeapon.currentWeaponState == reloading) // checks to see if the player is reloading
 		{
-			currentWeapon.reloadWeapon(currentWeapon, frameTime, &ammoClip[currentAmmoClip], currentAmmoClip);
+			currentWeapon.reloadWeapon(currentWeapon, frameTime, ammoClip[currentAmmoClip], currentAmmoClip);
 		}
 
-		ammoClip->ammoClipGravity(frameTime);
+		for (int i = 0; i < kNumAmmoClips; i++)  // cycles through all ammo clips
+		{
+		ammoClip[i].ammoClipGravity(frameTime);
+		}
+
+		if (currentAmmoClip == 1)
+		{
+			int j = 1;
+		}
 
 		for (int i = 0; i < numberOfTargets; i++) // cycles through the targets
 		{

@@ -36,8 +36,8 @@ void CAmmoClip::createAmmoClip(I3DEngine* myEngine, string meshName)
 
 void CAmmoClip::ammoClipGravity(float frameTime)
 {
-	for (int i = 0; i < kNumAmmoClips; i++)  // cycles through all ammo clips
-	{
+	//for (int i = 0; i < kNumAmmoClips; i++)  // cycles through all ammo clips
+	//{
 		if (YPos >= 1.0f) // checks if the ammo clip is above the floor
 		{
 			YPos -= frameTime * 50; // makes the ammo clip fall by reducing itrs y value
@@ -55,5 +55,5 @@ void CAmmoClip::ammoClipGravity(float frameTime)
 		}
 		worldModel->SetPosition(XPos, YPos, ZPos); // moves the ammo clip to its new position
 
-	}
+//	}
 }

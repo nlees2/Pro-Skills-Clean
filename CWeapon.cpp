@@ -33,7 +33,7 @@ void CWeapon::fireWeapon()
 {
 
 }
-void CWeapon::reloadWeapon(CWeapon &currentWeapon, float frameTime, CAmmoClip mapAmmoClip[], int currentAmmoClip)
+void CWeapon::reloadWeapon(CWeapon &currentWeapon, float frameTime, CAmmoClip &mapAmmoClip, int& currentAmmoClip)
 {
 	currentWeapon.reloadTimer += frameTime;  // runs the reload timer
 
@@ -41,11 +41,11 @@ void CWeapon::reloadWeapon(CWeapon &currentWeapon, float frameTime, CAmmoClip ma
 	{
 		currentWeapon.ammo = currentWeapon.maxAmmo;  // sets the players current ammo to the max size of the ammo clip
 		currentWeapon.currentWeaponState = active;		   // sets the players current weapon to active
-		mapAmmoClip[currentAmmoClip].XPos = currentWeapon.weaponModel->GetX(); // sets the X Position of the current ammo clip
-		mapAmmoClip[currentAmmoClip].YPos = currentWeapon.weaponModel->GetY(); // sets the Y Position of the current ammo clip
-		mapAmmoClip[currentAmmoClip].ZPos = currentWeapon.weaponModel->GetZ(); // sets the Z Position of the current ammo clip
-		mapAmmoClip[currentAmmoClip].rotation = 0.0f;							// sets the rotation variable of the ammo clip to upright
-		mapAmmoClip[currentAmmoClip].worldModel->ResetOrientation();			// resets teh ammo clips orientation
+		mapAmmoClip.XPos = currentWeapon.weaponModel->GetX(); // sets the X Position of the current ammo clip
+		mapAmmoClip.YPos = currentWeapon.weaponModel->GetY(); // sets the Y Position of the current ammo clip
+		mapAmmoClip.ZPos = currentWeapon.weaponModel->GetZ(); // sets the Z Position of the current ammo clip
+		mapAmmoClip.rotation = 0.0f;							// sets the rotation variable of the ammo clip to upright
+		mapAmmoClip.worldModel->ResetOrientation();			// resets teh ammo clips orientation
 		currentAmmoClip = nextInArray(currentAmmoClip, kNumAmmoClips);			// sets the current ammo clip to the next in the array, ready for the next reload
 	}
 }

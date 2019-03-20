@@ -1,6 +1,7 @@
 #pragma once
 #include "Definitions.h"
 #include "CCamera.h"
+#include <algorithm>
 
 class CPlayer
 {
@@ -15,6 +16,7 @@ public:
 	IMesh* dummyMesh;
 	IModel* playerDummy;
 	CCamera* myCamera;
+	std::string name = "Nick";
 
 	int score;
 	float playerOldX;					 // records the x position of the player in the previous frame for use in collision resolution
@@ -33,9 +35,11 @@ public:
 	void timers(float &frameTime, I3DEngine* myEngine);
 	bool raycastShoot(vector3D facingVector, vector3D dummyPosition, vector<target> &target, IModel* bulletTracer, const int ktargetQuantity, CPlayer myPlayer);
 	bool raycastWall(vector3D facingVector, vector3D dummyPosition, vector<model> &wall, IModel* bulletTracer, const int ktargetQuantity, int numberOfWalls);
+	bool raycastMenu(vector3D facingVector, vector3D dummyPosition, IModel* &target, IModel* bulletTracer, CPlayer myplayer);
 	collisionSide SphereToBox(float playerX, float playerZ, float cubeXLength, float cubeZLength, float cubeXPos, float cubeZPos, float playerRadius, float playerOldX, float playerOldZ);
-	bool SphereToBox(float pointX, float pointY, float pointZ, float cubeXLength, float cubeYLength, float cubeZLength, float cubeXPos, float cubeYPos, float cubeZPos, float sphereRadius);
+	bool SphereToBox2(float pointX, float pointY, float pointZ, float cubeXLength, float cubeYLength, float cubeZLength, float cubeXPos, float cubeYPos, float cubeZPos, float sphereRadius);
 	void ResolveCollision(CPlayer myPlayer, collisionSide collision);
-	void CPlayer::ResolveCollisionReverse(CPlayer myPlayer, collisionSide collision);
-
+	void ResolveCollisionReverse(CPlayer myPlayer, collisionSide collision);
+	void LoadHighScore(vector<highScore> &highScores);
+	void SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer);
 };
