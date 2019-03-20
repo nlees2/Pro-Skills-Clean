@@ -267,7 +267,10 @@ void main()
 			soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState);
 		}
 
-		if (myEngine->KeyHit(kWeapon1Key)) // sets the players weapon to the M4Colt
+
+		float weaponSelect = myEngine->GetMouseWheelMovement(); // gets mouse wheel movement since last frame
+ 
+		if (weaponSelect > 0 || myEngine->KeyHit(kWeapon1Key)) // sets the players weapon to the M4Colt
 		{
 			currentActiveWeapon = M4ColtWeapon; // sets the current active weapon enum to be the M4Colt
 
@@ -277,7 +280,7 @@ void main()
 			currentWeapon.currentWeaponState = active;	// sets the current weapon to active
 			currentWeapon.weaponModel->SetY(10.0f);			// moves the current weapon to the correct position
 		}
-		if (myEngine->KeyHit(kWeapon2Key)) // sets the players weapon to the Desert Eagle
+		if (weaponSelect < 0 || myEngine->KeyHit(kWeapon2Key)) // sets the players weapon to the Desert Eagle
 		{
 			currentActiveWeapon = desertEagleWeapon; // sets the current active weapon enum to be the Desert Eagle
 
@@ -337,6 +340,7 @@ void main()
 				currentWeapon.ammo -= 1; // removes 1 bullet from the ammo clip
 				currentWeapon.animationTimer = 0.1f;	// sets the weapons animation timer to 0.1 seconds
 			}
+
 
 		}
 
