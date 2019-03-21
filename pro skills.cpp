@@ -42,6 +42,7 @@ void main()
 
 	CPlayer myPlayer(frameTime, myEngine);
 	myPlayer.currentPlayerState = notPlaying;
+	myPlayer.mSoundEnabled = true;
 
 	CAmmoClip ammoClip[kNumAmmoClips];
 	for (int i = 0; i < kNumAmmoClips; i++)
@@ -132,6 +133,7 @@ void main()
 	IMesh* wallMesh = myEngine->LoadMesh("Wall.x");						// Walls
 	IMesh* crateMesh = myEngine->LoadMesh("WoodCrate1.x");				// Tall wooden crates
 	IMesh* cubeMesh = myEngine->LoadMesh("Block.x");					// small box, reskined and resized for multiple different uses
+	IMesh* halfMenuBoxMesh = myEngine->LoadMesh("halfMenuBlock.x");
 	IMesh* robberMesh = myEngine->LoadMesh("robberTarget.x");			// Targets
 	IMesh* sqaureWallMesh = myEngine->LoadMesh("squareWall.x");			// taller wall mesh
 	IMesh* bulletMesh = myEngine->LoadMesh("Bullet.x");
@@ -139,15 +141,18 @@ void main()
 	IModel* spawnDummy = DummyMesh->CreateModel(0.0f, 00.0f, 0.0f);		// created the spawn location dummy (used to create the box collision for the target range enclosure)
 	IModel* highScoreBox = cubeMesh->CreateModel(20.0f, 5.0f, 54.0f);
 	IModel* startBox = cubeMesh->CreateModel(10.0f, 5.0f, 54.0f);
-	IModel* timeUpBox = cubeMesh->CreateModel(0.0f, 7.5f, 54.0f);
-	IModel* timeDownBox = cubeMesh->CreateModel(0.0f, 2.5f, 54.0f);
+	IModel* timeUpBox = halfMenuBoxMesh->CreateModel(0.0f, 7.5f, 54.0f);
+	IModel* timeDownBox = halfMenuBoxMesh->CreateModel(0.0f, 2.5f, 54.0f);
+	IModel* soundBox = cubeMesh->CreateModel(30.0f, 5.0f, 54.0f);
+
 	highScoreBox->SetSkin("highScoresOff.jpg");
 	startBox->SetSkin("startOff.jpg");
 	timeUpBox->SetSkin("timeUp.jpg");
-	timeUpBox->ScaleY(0.5f);
+	//timeUpBox->ScaleY(0.5f);
 	timeDownBox->SetSkin("timeDown.jpg");
-	timeDownBox->ScaleY(0.5f);
+	//timeDownBox->ScaleY(0.5f);
 
+	soundBox->SetSkin("soundOn.jpg");
 																		//desertEagle.model = desertEagleMesh->CreateModel(0.0f, -5.0f, 0.0f);// Creates the Desert Eagle (under the map)
 	IModel* crate[kCrateQuantity];										// Declares the wooden crate models
 	IModel* bulletTracer[kNumBulletTracers];							// Declares the bullet tracer models
@@ -274,8 +279,9 @@ void main()
 		{
 			for (int i = 0; i < NUMBEROFHIGHSCORES; i++)
 			{
-				highScoreText << i + 1 << ". " << highScores[i].name << " " << highScores[i].score;
-				highScoreFont->Draw(highScoreText.str(), 50.0f, i * 80.0f + 100.0f);
+				//highScoreText << i + 1 << ". " << "Name: " << highScores[i].name << " Score: " << highScores[i].score << " Time: " << highScores[i].time << " Kills Per Min:  " << highScores[i].killsPerMinute;
+				highScoreText << i + 1 << ". "<< highScores[i].name << ": " << highScores[i].score;
+				highScoreFont->Draw(highScoreText.str(), 50.0f, i * 80.0f + 120.0f);
 				highScoreText.str("");
 			}
 		}
@@ -292,7 +298,9 @@ void main()
 		{
 			currentWeapon.reloadTimer = 0.0f;
 			currentWeapon.currentWeaponState = reloading;
-			soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState);
+			
+			soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
+		
 		}
 
 
@@ -322,7 +330,7 @@ void main()
 
 		if (myEngine->KeyHit(kQuitKey)) //Quits the game
 		{
-			myPlayer.SaveHighScore(highScores, myPlayer);
+			myPlayer.SaveHighScore(highScores, myPlayer, startTime - time);
 			myEngine->Stop();
 		}
 
@@ -333,7 +341,8 @@ void main()
 		{
 			if (currentWeapon.ammo <= 0 && currentWeapon.currentWeaponState != reloading) // checks if the current ammo clip is empty, and that the player is not already reloading
 			{
-				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState);
+				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
+				
 				currentWeapon.currentWeaponState = reloading; // sets the state of the current weapon to reloading
 				currentWeapon.reloadTimer = 0.0f;			 // sets the reload timer to 0
 			}
@@ -364,30 +373,31 @@ void main()
 					myPlayer.raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets, myPlayer);
 					//raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets);
 				}
-
-				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState);
+				
+				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
+				
 				currentWeapon.ammo -= 1; // removes 1 bullet from the ammo clip
 				currentWeapon.animationTimer = 0.1f;	// sets the weapons animation timer to 0.1 seconds
 			}
 
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && highScoreDisplay == true)
 			{
 				highScoreDisplay = false;
 				highScoreBox->SetSkin("highScoresOff.jpg");
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer))
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
 			{
 				highScoreDisplay = true;
 				highScoreBox->SetSkin("highScoresOn.jpg");
 			}
 
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == playing)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == playing)
 			{
 				time = startTime; 
 				myPlayer.currentPlayerState = notPlaying;
 				startBox->SetSkin("startOff.jpg");
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying)
 			{
 				// set timer to 2 minutes
 				// set score to 0
@@ -396,16 +406,28 @@ void main()
 				myPlayer.score = 0;
 				startBox->SetSkin("startOn.jpg");
 			}
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime < MAXSTARTTIME)
 			{
 				startTime += 60.0f;
 				time = startTime;
 				
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeDownBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeDownBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime > MINSTARTTIME)
 			{
 				startTime -= 60.0f;
 				time = startTime;
+			}
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, soundBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.mSoundEnabled == false)
+			{
+				soundBox->SetSkin("soundOn.jpg");
+				myPlayer.mSoundEnabled = true;
+
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, soundBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.mSoundEnabled == true)
+			{
+				soundBox->SetSkin("soundOff.jpg");
+				myPlayer.mSoundEnabled = false;
+
 			}
 		}
 
@@ -415,7 +437,7 @@ void main()
 		}
 		if (time < 0.0f && myPlayer.currentPlayerState == playing)
 		{
-			myPlayer.SaveHighScore(highScores, myPlayer);
+			myPlayer.SaveHighScore(highScores, myPlayer, startTime - time);
 			myPlayer.currentPlayerState = notPlaying;
 
 		}
@@ -428,7 +450,10 @@ void main()
 
 			if (currentWeapon.ammo <= 0 && currentWeapon.currentWeaponState != reloading) // checks if the current ammo clip is empty, and that the player is not already reloading
 			{
-				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState);
+				
+				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
+				
+				
 				currentWeapon.currentWeaponState = reloading;  // sets the state of the current weapon to reloading
 				currentWeapon.reloadTimer = 0.0f;			  // sets the reload timer to 0
 			}
@@ -459,28 +484,30 @@ void main()
 					//raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets);
 					myPlayer.raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets, myPlayer);
 				}
-				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState);
+				
+				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
+				
 				currentWeapon.ammo -= 1;   // removes 1 bullet from the ammo clip
 				currentWeapon.animationTimer = 0.1f;	 // sets the weapons animation timer to 0.1 seconds
 			}
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && highScoreDisplay == true)
 			{
 				highScoreDisplay = false;
 				highScoreBox->SetSkin("highScoresOff.jpg");
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer))
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
 			{
 				highScoreDisplay = true;
 				highScoreBox->SetSkin("highScoresOn.jpg");
 			}
 
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == playing)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == playing)
 			{
 				time = startTime;
 				myPlayer.currentPlayerState = notPlaying;
 				startBox->SetSkin("startOff.jpg");
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying)
 			{
 				// set timer to 2 minutes
 				// set score to 0
@@ -489,16 +516,28 @@ void main()
 				myPlayer.score = 0;
 				startBox->SetSkin("startOn.jpg");
 			}
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime < MAXSTARTTIME)
 			{
 				startTime += 60.0f;
 				time = startTime;
 
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeDownBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeDownBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime > MINSTARTTIME)
 			{
 				startTime -= 60.0f;
 				time = startTime;
+			}
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, soundBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.mSoundEnabled == false)
+			{
+				soundBox->SetSkin("soundOn.jpg");
+				myPlayer.mSoundEnabled = true;
+
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, soundBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.mSoundEnabled == true)
+			{
+				soundBox->SetSkin("soundOff.jpg");
+				myPlayer.mSoundEnabled = false;
+
 			}
 		}
 

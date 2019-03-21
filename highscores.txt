@@ -1,10 +1,10 @@
-Nick 122
-Nick 122
-Nick 64
-Nick 11
-Nick 8
-Nick 7
-Nick 6
-Nick 6
-Nick 6
-Nick 0
+Nick 9 120 4.5
+Nick 6 3.17854 113.259
+Nick 0 120 0
+Nick 0 120 0
+Nick 0 120 0
+Nick 0 120 0
+Nick 0 120 0
+Nick 0 120 0
+Nick 0 120 0
+Nick 0 0 -nan(ind)

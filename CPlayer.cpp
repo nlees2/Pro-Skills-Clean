@@ -220,7 +220,7 @@ bool CPlayer::raycastWall(vector3D facingVector, vector3D dummyPosition, vector<
 	}
 	return false;
 }
-bool CPlayer::raycastMenu(vector3D facingVector, vector3D dummyPosition, IModel* &target, IModel* bulletTracer, CPlayer myplayer)
+bool CPlayer::raycastMenu(vector3D facingVector, vector3D dummyPosition, IModel* &target, IModel* bulletTracer, CPlayer myplayer, int blockYSize)
 {
 
 	//int gunDamage = 1;
@@ -257,7 +257,7 @@ bool CPlayer::raycastMenu(vector3D facingVector, vector3D dummyPosition, IModel*
 			testPointY += rayTrace.y;
 			testPointZ += rayTrace.z;
 
-			hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, 10.0f, 10.0f, 1.0f, target->GetX(), target->GetY(), target->GetZ(), 0.05f);
+			hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, 10.0f, blockYSize, 1.0f, target->GetX(), target->GetY(), target->GetZ(), 0.05f);
 			if (hitObject)
 			{
 				bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
@@ -365,6 +365,8 @@ void CPlayer::ResolveCollisionReverse(CPlayer myPlayer, collisionSide collision)
 void CPlayer::LoadHighScore(vector<highScore> &highScores)
 {
 	float scoreTemp;
+	float timeTemp;
+	float killsPerMinTemp;
 	string nameTemp;
 
 	highScore playerScore;
@@ -386,8 +388,13 @@ void CPlayer::LoadHighScore(vector<highScore> &highScores)
 
 			fileInput >> scoreTemp;
 
+			fileInput >> timeTemp;
+			fileInput >> killsPerMinTemp;
+
 			playerScore.score = scoreTemp;
 			playerScore.name = nameTemp;
+			playerScore.time = timeTemp;
+			playerScore.killsPerMinute = killsPerMinTemp;
 
 			highScores.push_back(playerScore);
 		}
@@ -396,17 +403,21 @@ void CPlayer::LoadHighScore(vector<highScore> &highScores)
 
 }
 
-void CPlayer::SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer)
+void CPlayer::SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer, float time)
 {
 	ofstream fileInput;
 	fileInput.open("highscores.txt"); // opens the input file
 	if (highScores.size() >= 10)
 	{
+	
 		highScores.pop_back();
+	
 	}
 	highScore playerScore;
 	playerScore.name = currentPlayer.name;
 	playerScore.score = currentPlayer.score;
+	playerScore.time = time;
+	playerScore.killsPerMinute = playerScore.score / (playerScore.time / 60);
 	highScores.push_back(playerScore);
 	sort(highScores.begin(), highScores.end(), compare);
 
@@ -421,7 +432,7 @@ void CPlayer::SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer
 				highScores[i].name = "unknown";
 			}
 
-			fileInput << highScores[i].name << " " << highScores[i].score << endl;;;
+			fileInput << highScores[i].name << " " << highScores[i].score << " " << highScores[i].time << " " << highScores[i].killsPerMinute << endl;
 		}
 
 	}

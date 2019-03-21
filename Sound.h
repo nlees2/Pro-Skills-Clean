@@ -10,6 +10,7 @@ Introduction to SFML Audio
 #include <ctype.h>
 #include <time.h>
 #include <iostream>
+#include "Definitions.h"
 using namespace std;
 
 // Only using SFML audio although it has other modules
@@ -58,7 +59,7 @@ sf::Vector3f listenerUp(0.0, 1.0, 0.0);
 //****************
 // Code
 
-void soundMain(activeWeapon currentActiveWeapon, int ammo, weaponState currentWeaponState)
+void soundMain(activeWeapon currentActiveWeapon, int ammo, weaponState currentWeaponState, bool soundEnabled)
 {
 	//****************
 	// Buffers
@@ -66,107 +67,72 @@ void soundMain(activeWeapon currentActiveWeapon, int ammo, weaponState currentWe
 	// Load a sound file into a sound buffer
 	// Supports WAV, OGG/Vorbis, FLAC only. Download Audacity (free) to convert other formats for use (use WAV or OGG)
 
-
-	if (ammo == 0)
+	if (soundEnabled == true)
 	{
-		if (!buffer.loadFromFile("Gun+Empty.wav"))
+		if (ammo == 0)
 		{
-			cout << "Error loading sound file" << endl;
-			while (!_kbhit());
-			return;
+			if (!buffer.loadFromFile("Gun+Empty.wav"))
+			{
+				cout << "Error loading sound file" << endl;
+				while (!_kbhit());
+				return;
+			}
 		}
-	}
-	else if (currentWeaponState == reloading)
-	{
-		if (!buffer.loadFromFile("Gun+Reload.wav"))
+		else if (currentWeaponState == reloading)
 		{
-			cout << "Error loading sound file" << endl;
-			while (!_kbhit());
-			return;
+			if (!buffer.loadFromFile("Gun+Reload.wav"))
+			{
+				cout << "Error loading sound file" << endl;
+				while (!_kbhit());
+				return;
+			}
 		}
-	}
-	else if (currentActiveWeapon == M4ColtWeapon && currentWeaponState != reloading)
-	{
-		if (!buffer.loadFromFile("shoot.wav"))
+		else if (currentActiveWeapon == M4ColtWeapon && currentWeaponState != reloading)
 		{
-			cout << "Error loading sound file" << endl;
-			while (!_kbhit());
-			return;
+			if (!buffer.loadFromFile("shoot.wav"))
+			{
+				cout << "Error loading sound file" << endl;
+				while (!_kbhit());
+				return;
+			}
 		}
-	}
-	else if (currentActiveWeapon == desertEagleWeapon && currentWeaponState != reloading)
-	{
-		if (!buffer.loadFromFile("Gun+Shot2.wav"))
+		else if (currentActiveWeapon == desertEagleWeapon && currentWeaponState != reloading)
 		{
-			cout << "Error loading sound file" << endl;
-			while (!_kbhit());
-			return;
+			if (!buffer.loadFromFile("Gun+Shot2.wav"))
+			{
+				cout << "Error loading sound file" << endl;
+				while (!_kbhit());
+				return;
+			}
 		}
+
+		//****************
+		// Sources
+
+		// Indicate that our sound source will use the buffer we just loaded
+		sound.setBuffer(buffer);
+
+		// Set the properties of the source. Details of all available properties are in the SFML documentation of the Sound class
+		sound.setVolume(100.0f); // 0 to 100
+		sound.setPitch(1.0f);
+		sound.setLoop(false);
+		sound.setPosition(soundPos);
+
+
+		//****************
+		// Listener
+
+		// Set the properties of the listener. These are all the available listener properties
+		// Note how this is doen with static member functions - there is no listener variable
+		sf::Listener::setGlobalVolume(100.0f); // 0 to 100
+		sf::Listener::setPosition(listenerPos);
+		sf::Listener::setDirection(listenerForward);
+		sf::Listener::setUpVector(listenerUp);
+
+
+		sound.play();;
+
 	}
-
-	//****************
-	// Sources
-
-	// Indicate that our sound source will use the buffer we just loaded
-	sound.setBuffer(buffer);
-
-	// Set the properties of the source. Details of all available properties are in the SFML documentation of the Sound class
-	sound.setVolume(100.0f); // 0 to 100
-	sound.setPitch(1.0f);
-	sound.setLoop(false);
-	sound.setPosition(soundPos);
-
-
-	//****************
-	// Listener
-
-	// Set the properties of the listener. These are all the available listener properties
-	// Note how this is doen with static member functions - there is no listener variable
-	sf::Listener::setGlobalVolume(100.0f); // 0 to 100
-	sf::Listener::setPosition(listenerPos);
-	sf::Listener::setDirection(listenerForward);
-	sf::Listener::setUpVector(listenerUp);
-
-
-	sound.play();;
-
-	//****************
-	// Playback
-
-	// Main loop
-	//cout << "P : Play,  S : Stop,  H : Pause,  Q : Quit" << endl;
-	//char c = 'P'; // Keypress to start playing sound immediately
-	//do
-	//{
-	//	// Start, stop and pause the sound source based on keypress
-	//	switch (c)
-	//	{
-	//	case 'P':
-	//		sound.play();;
-	//		break;
-
-	//	case 'S':
-	//		sound.stop();
-	//		break;
-
-	//	case 'H':
-	//		if (sound.getStatus() == sf::SoundSource::Status::Paused)
-	//		{
-	//			// If sound already paused, play it again
-	//			sound.play();
-	//		}
-	//		else
-	//		{
-	//			sound.pause();
-	//		}
-	//		break;
-	//	}
-
-	//	// Get any new keypresses - set keypress to ' ' if none
-	//	c = ' ';
-	//	if (_kbhit()) { c = toupper(_getch()); }
-
-	//} while (c != 'Q');
 }
 
 
