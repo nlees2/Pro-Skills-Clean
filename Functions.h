@@ -37,7 +37,7 @@ const EKeyCode kWeapon2Key = Key_2;		//Selects the Desert Eagle
 
 
 
-enum playerState { playing };
+enum playerState { playing, notPlaying };
 
 
 enum weaponState { active, inactive, reloading };

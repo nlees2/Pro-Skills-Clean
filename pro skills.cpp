@@ -41,6 +41,7 @@ void main()
 	CWeapon currentWeapon;
 
 	CPlayer myPlayer(frameTime, myEngine);
+	myPlayer.currentPlayerState = notPlaying;
 
 	CAmmoClip ammoClip[kNumAmmoClips];
 	for (int i = 0; i < kNumAmmoClips; i++)
@@ -112,7 +113,8 @@ void main()
 
 	// Visual output variables
 	myPlayer.score = 0;						  // players score
-	int time = 120;						  // amount of time the player has in the game
+	float startTime = 120.0f;
+	float time = startTime;						  // amount of time the player starts the next game with, equal to startTime
 	int minutes;						  // number of minutes remaining in time (time / 60)
 	int seconds;						  // number of seconds in time			 (time % 60)
 	bool highScoreDisplay = false;
@@ -135,9 +137,16 @@ void main()
 	IMesh* bulletMesh = myEngine->LoadMesh("Bullet.x");
 	IModel* floor = floorMesh->CreateModel(0.0f, 0.0f, 0.0f);			// Creates the floor model
 	IModel* spawnDummy = DummyMesh->CreateModel(0.0f, 00.0f, 0.0f);		// created the spawn location dummy (used to create the box collision for the target range enclosure)
-	IModel* highSCoreBox = cubeMesh->CreateModel(20.0f, 5.0f, 54.0f);
-
-	highSCoreBox->SetSkin("highScores.jpg");
+	IModel* highScoreBox = cubeMesh->CreateModel(20.0f, 5.0f, 54.0f);
+	IModel* startBox = cubeMesh->CreateModel(10.0f, 5.0f, 54.0f);
+	IModel* timeUpBox = cubeMesh->CreateModel(0.0f, 7.5f, 54.0f);
+	IModel* timeDownBox = cubeMesh->CreateModel(0.0f, 2.5f, 54.0f);
+	highScoreBox->SetSkin("highScoresOff.jpg");
+	startBox->SetSkin("startOff.jpg");
+	timeUpBox->SetSkin("timeUp.jpg");
+	timeUpBox->ScaleY(0.5f);
+	timeDownBox->SetSkin("timeDown.jpg");
+	timeDownBox->ScaleY(0.5f);
 
 																		//desertEagle.model = desertEagleMesh->CreateModel(0.0f, -5.0f, 0.0f);// Creates the Desert Eagle (under the map)
 	IModel* crate[kCrateQuantity];										// Declares the wooden crate models
@@ -251,7 +260,7 @@ void main()
 		}
 
 		minutes = (time / 60); // calculates the number of minutes remaining;
-		seconds = (time % 60); // calculates the number of seconds remaining;
+		seconds = (int(time) % 60); // calculates the number of seconds remaining;
 
 		timeText << "Time Remaining: " << minutes << " Minutes " << seconds << " Seconds"; // outputs the time remaining to the screen
 		myFont->Draw(timeText.str(), 700, 20);
@@ -361,17 +370,55 @@ void main()
 				currentWeapon.animationTimer = 0.1f;	// sets the weapons animation timer to 0.1 seconds
 			}
 
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
 			{
 				highScoreDisplay = false;
+				highScoreBox->SetSkin("highScoresOff.jpg");
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer))
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer))
 			{
 				highScoreDisplay = true;
+				highScoreBox->SetSkin("highScoresOn.jpg");
 			}
 
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == playing)
+			{
+				time = startTime; 
+				myPlayer.currentPlayerState = notPlaying;
+				startBox->SetSkin("startOff.jpg");
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			{
+				// set timer to 2 minutes
+				// set score to 0
+				myPlayer.currentPlayerState = playing;
+				time = startTime;
+				myPlayer.score = 0;
+				startBox->SetSkin("startOn.jpg");
+			}
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			{
+				startTime += 60.0f;
+				time = startTime;
+				
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeDownBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			{
+				startTime -= 60.0f;
+				time = startTime;
+			}
 		}
 
+		if (time > 0.0f && myPlayer.currentPlayerState == playing)
+		{
+			time -= frameTime;
+		}
+		if (time < 0.0f && myPlayer.currentPlayerState == playing)
+		{
+			myPlayer.SaveHighScore(highScores, myPlayer);
+			myPlayer.currentPlayerState = notPlaying;
+
+		}
 	
 
 		// for automatic fire weapons
@@ -416,13 +463,42 @@ void main()
 				currentWeapon.ammo -= 1;   // removes 1 bullet from the ammo clip
 				currentWeapon.animationTimer = 0.1f;	 // sets the weapons animation timer to 0.1 seconds
 			}
-			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer) && highScoreDisplay == true)
 			{
 				highScoreDisplay = false;
+				highScoreBox->SetSkin("highScoresOff.jpg");
 			}
-			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highSCoreBox, bulletTracer[bulletTracerSelection], myPlayer))
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer))
 			{
 				highScoreDisplay = true;
+				highScoreBox->SetSkin("highScoresOn.jpg");
+			}
+
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == playing)
+			{
+				time = startTime;
+				myPlayer.currentPlayerState = notPlaying;
+				startBox->SetSkin("startOff.jpg");
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			{
+				// set timer to 2 minutes
+				// set score to 0
+				myPlayer.currentPlayerState = playing;
+				time = startTime;
+				myPlayer.score = 0;
+				startBox->SetSkin("startOn.jpg");
+			}
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			{
+				startTime += 60.0f;
+				time = startTime;
+
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeDownBox, bulletTracer[bulletTracerSelection], myPlayer) && myPlayer.currentPlayerState == notPlaying)
+			{
+				startTime -= 60.0f;
+				time = startTime;
 			}
 		}
 
@@ -470,11 +546,11 @@ void main()
 
 			if (mapTarget[i].currentTargetState == hit) // checks if the target is hit
 			{
-				if (mapTarget[i].hostage == false) // checks if the taraget was a hostage
+				if (mapTarget[i].hostage == false && myPlayer.currentPlayerState == playing) // checks if the taraget was a hostage
 				{
 					myPlayer.score += 1; // increases the players scorre
 				}
-				else
+				else if (myPlayer.currentPlayerState == playing)
 				{
 					myPlayer.score -= 1; // decreases the players score
 				}

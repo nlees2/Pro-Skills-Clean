@@ -17,6 +17,7 @@ public:
 	IModel* playerDummy;
 	CCamera* myCamera;
 	std::string name = "Nick";
+	playerState currentPlayerState;
 
 	int score;
 	float playerOldX;					 // records the x position of the player in the previous frame for use in collision resolution

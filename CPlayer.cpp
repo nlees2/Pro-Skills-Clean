@@ -31,7 +31,6 @@ void CPlayer::timers(float &frameTime, I3DEngine* myEngine)
 	mFallSpeed = (gameSpeed * frameTime) * 1.5f;
 	mLookSpeed = (gameSpeed * frameTime) * 3.0f;
 	//mJumpTimer = 0;
-
 }
 
 void CPlayer::move(I3DEngine* myEngine)

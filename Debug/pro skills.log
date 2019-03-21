@@ -4,14 +4,15 @@ c:\users\nick\desktop\pro-skills-clean-master\functions.h(23): warning C4091: 'e
 c:\users\nick\desktop\pro-skills-clean-master\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\nick\desktop\pro-skills-clean-master\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 c:\users\nick\desktop\pro-skills-clean-master\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(106): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(183): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(186): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(269): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(468): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(482): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(542): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(143): warning C4101: 'crate': unreferenced local variable
-c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(123): warning C4101: 'mouseMovement': unreferenced local variable
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(107): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(192): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(195): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(262): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(278): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(544): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(558): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(618): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(152): warning C4101: 'crate': unreferenced local variable
+c:\users\nick\desktop\pro-skills-clean-master\pro skills.cpp(125): warning C4101: 'mouseMovement': unreferenced local variable
   pro skills.vcxproj -> C:\Users\Nick\Desktop\Pro-Skills-Clean-master\\pro skillsDebug.exe
   Copying DLLs & shaders...
