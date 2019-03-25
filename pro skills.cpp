@@ -7,7 +7,9 @@
 #include "CPlayer.h"
 #include "CWeapon.h"
 #include "CAmmoClip.h"
+#include "CBullet.h"
 #include "Sound.h"
+#include "CGrenade.h"
 using namespace std;
 using namespace tle;
 
@@ -50,10 +52,32 @@ void main()
 		ammoClip[i].createAmmoClip(myEngine, "Block.x");
 	}
 
+	CBullet bullet[kNumBullets];
+	for (int i = 0; i < kNumBullets; i++)
+	{
+		bullet[i].createBullet(myEngine, "BulletCasing.x");
+	}
+
+	CGrenade grenade[kNumGrenades];
+	for (int i = 0; i < kNumGrenades; i++)
+	{
+		grenade[i].createGrenade(myEngine, "flashBang.x");
+	}
+
+
+	//for (int i = 0; i < kNumBullets; i++)
+	//{
+	//	bullet[i] = bulletMesh->CreateModel(0.0f, -10.0f, 0.0f); // hides the bullet tracers under the world at game start
+	//	//bullet[i]->Scale(0.1f);
+	//}
+
 	//////////////// Variables
 
 	int currentAmmoClip = 0; // this int will cycle through the numbers 0 - kNumBulletTracers and choose which model to move on each reload
+	int currentBullet = 0;
+	int currentGrenade = 0;
 	int temp; // used for reassigning values
+	bool grenadeDropped = false;
 
 	int bulletTracerSelection = 0;  // this int will cycle through the numbers 0 - kNumAmmoClips and choose which model to move to each bullet hole
 
@@ -62,6 +86,7 @@ void main()
 	bool boxHit = false; // bool to measure if the player has shot a box
 	float pMatrix[4][4];	 // matrix used to store the player models information to be passed to functions such as facing vector and world location
 	float cMatrix[4][4];	 // matrix used to store the camera models information to be passed to functions such as facing vector and world location
+	float gMatrix[4][4];	 // matrix used to store the grenade models information to be passed to functions such as facing vector and world location
 
 	stringstream scoreText; // screen score output
 	stringstream ammoText; // screen ammo output
@@ -70,6 +95,7 @@ void main()
 	stringstream highScoreText; // high score output
 	stringstream fpsText;   // screen fps output
 	ISprite* crosshair;     // players crosshair
+	ISprite* flashBlind;
 
 	string mapName; // name of the map file to be read in (initialized in read map function)
 
@@ -82,6 +108,10 @@ void main()
 	vector3D dummyPosition;				 // stores the players position in the world
 	float lengthOfFV;					 // calculates the length of the facing vector
 	vector3D fvNormal;					 // normalizes the facing vector
+
+	vector3D gFacingVector;				 // Stores the players facing vector, used in ray tracing for bullet collisions
+	float gLengthOfFV;					 // calculates the length of the facing vector
+	vector3D gFvNormal;					 // normalizes the facing vector
 
 	using wall = vector<model>;
 	wall mapWall;				// creates a vector storing all walls on the map
@@ -106,6 +136,8 @@ void main()
 	collisions mapWallBox;
 
 	crosshair = myEngine->CreateSprite("crosshair.png", (resolutionX / 2) - 15, (resolutionY / 2.0f) - 17, 0.1f); // displays a crosshair in the center of the screen
+
+	//flashBlind = myEngine->CreateSprite("flashbangBlind.png", 0.0f, 0.0f, 0.1f);
 
 	currentWeapon.animationTimer = 0.0f;				// sets the animation timer used for weapons to 0
 
@@ -136,6 +168,8 @@ void main()
 	IMesh* halfMenuBoxMesh = myEngine->LoadMesh("halfMenuBlock.x");
 	IMesh* robberMesh = myEngine->LoadMesh("robberTarget.x");			// Targets
 	IMesh* sqaureWallMesh = myEngine->LoadMesh("squareWall.x");			// taller wall mesh
+	IMesh* flashBangMesh = myEngine->LoadMesh("flashBang.x");
+	IMesh* aidenMesh = myEngine->LoadMesh("Block.x");
 	IMesh* bulletMesh = myEngine->LoadMesh("Bullet.x");
 	IModel* floor = floorMesh->CreateModel(0.0f, 0.0f, 0.0f);			// Creates the floor model
 	IModel* spawnDummy = DummyMesh->CreateModel(0.0f, 00.0f, 0.0f);		// created the spawn location dummy (used to create the box collision for the target range enclosure)
@@ -144,6 +178,11 @@ void main()
 	IModel* timeUpBox = halfMenuBoxMesh->CreateModel(0.0f, 7.5f, 54.0f);
 	IModel* timeDownBox = halfMenuBoxMesh->CreateModel(0.0f, 2.5f, 54.0f);
 	IModel* soundBox = cubeMesh->CreateModel(30.0f, 5.0f, 54.0f);
+	IModel* aidenBox = cubeMesh->CreateModel(45.0f, 8.0f, -50.0f);
+	//IModel* flashBang = flashBangMesh->CreateModel(0.0f, 5.0f, 0.0f);
+	aidenBox->Scale(0.1);
+	aidenBox->RotateY(180.0);
+	aidenBox->SetSkin("aiden face.png");
 
 	highScoreBox->SetSkin("highScoresOff.jpg");
 	startBox->SetSkin("startOff.jpg");
@@ -173,7 +212,6 @@ void main()
 	{
 		bulletTracer[i] = bulletMesh->CreateModel(0.0f, -10.0f, 0.0f); // hides the bullet tracers under the world at game start
 		bulletTracer[i]->Scale(0.1f);
-		//bulletTracer[i]->SetSkin("bulletHole.png");
 	}
 
 	// craetes the models for the walls
@@ -243,6 +281,9 @@ void main()
 	// The main game loop, repeat until engine is stopped
 	while (myEngine->IsRunning())
 	{
+
+		//flashBlind->MoveX(-frameTime * 20);
+
 		myPlayer.timers(frameTime, myEngine);
 
 		myPlayer.move(myEngine);
@@ -485,10 +526,11 @@ void main()
 					myPlayer.raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets, myPlayer);
 				}
 				
+				currentWeapon.animationTimer = 0.1f;	// sets the weapons animation timer to 0.1 seconds
 				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
 				
 				currentWeapon.ammo -= 1;   // removes 1 bullet from the ammo clip
-				currentWeapon.animationTimer = 0.1f;	 // sets the weapons animation timer to 0.1 seconds
+				bullet[currentBullet].SetPosition(currentWeapon.weaponModel->GetX(), currentWeapon.weaponModel->GetY(), currentWeapon.weaponModel->GetZ(), currentBullet);
 			}
 			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && highScoreDisplay == true)
 			{
@@ -539,6 +581,13 @@ void main()
 				myPlayer.mSoundEnabled = false;
 
 			}
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, aidenBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
+			{
+				for (int i = 0; i < kNumBulletTracers; i++)
+				{
+					bulletTracer[i]->SetSkin("aiden face.png");
+				}
+			}
 		}
 
 		currentWeapon.fireRateTimer -= frameTime;    // counts down the fire rate timer, controlling the time between shots
@@ -565,10 +614,9 @@ void main()
 		{
 		ammoClip[i].ammoClipGravity(frameTime);
 		}
-
-		if (currentAmmoClip == 1)
+		for (int i = 0; i < kNumBullets; i++)  // cycles through all bullets
 		{
-			int j = 1;
+			bullet[i].BulletGravity(frameTime);
 		}
 
 		for (int i = 0; i < numberOfTargets; i++) // cycles through the targets
@@ -640,6 +688,36 @@ void main()
 
 		}
 
+		// flashbang drops
+
+		if (myPlayer.score == 1 && grenadeDropped == false)
+		{
+			grenade[currentGrenade].XPos = 0.0f;
+			grenade[currentGrenade].YPos = 80.0f;
+			grenade[currentGrenade].ZPos = 60.0f;
+			grenadeDropped = true;
+		}
+
+		//grenade[currentGrenade].worldModel->GetMatrix(&gMatrix[0][0]); // calls the matrix for the player, recording both the facing vector and the world position
+
+		vector3D cfacingVector = { cMatrix[2][0], cMatrix[2][1], cMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
+		float clengthOfFV = sqrt((cMatrix[2][0] * cMatrix[2][0]) + (cMatrix[2][1] * cMatrix[2][1]) + (cMatrix[2][2] * cMatrix[2][2])); // calculates the  length of the facing vector
+		vector3D cfvNormal = { cMatrix[2][0] / clengthOfFV, cMatrix[2][1] / clengthOfFV, cMatrix[2][2] / clengthOfFV };	// normalizes the facing vector for use in the ray cast
+
+
+		for (int i = 0; i < kNumGrenades; i++)
+		{
+			grenade[i].GrenadeGravity(frameTime);
+		}
+
+		if (grenade[currentGrenade].YPos < 10.0f && grenadeDropped == true)
+		{
+			facingVector = { pMatrix[2][0], pMatrix[2][1], pMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
+			lengthOfFV = sqrt((pMatrix[2][0] * pMatrix[2][0]) + (pMatrix[2][1] * pMatrix[2][1]) + (pMatrix[2][2] * pMatrix[2][2])); // calculates the  length of the facing vector
+			fvNormal = { pMatrix[2][0] / lengthOfFV, pMatrix[2][1] / lengthOfFV, pMatrix[2][2] / lengthOfFV };	// normalizes the facing vector for use in the ray cast
+			grenade[currentGrenade].Detonate(myPlayer.myCamera->cameraDummy, fvNormal, grenade[currentGrenade].worldModel);
+		}
+
 		// collisions with crates
 		for (int i = 0; i < numberOfBoxes; i++)
 		{
@@ -665,7 +743,7 @@ void main()
 		//Collisions the the wall enclosure, disabled while building for convinience
 		collisionSide collision = myPlayer.SphereToBox(myPlayer.playerDummy->GetX(), myPlayer.playerDummy->GetZ(), 100, 100, spawnDummy->GetX(), spawnDummy->GetZ(), dummyRadius, myPlayer.playerOldX, myPlayer.playerOldZ);
 
-		myPlayer.ResolveCollisionReverse(myPlayer, collision);
+		//myPlayer.ResolveCollisionReverse(myPlayer, collision);
 	}
 
 	// Delete the 3D engine now we are finished with it

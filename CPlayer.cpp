@@ -103,7 +103,7 @@ bool CPlayer::raycastShoot(vector3D facingVector, vector3D dummyPosition, vector
 
 	//int gunDamage = 1;
 	//float fireRate = 0.25f;
-	float weaponRange = 200.0f;  // the distance that the ray will travel, longer range means more calculations
+	float weaponRange = 300.0f;  // the distance that the ray will travel, longer range means more calculations
 								 //float hitForce = 100.0f;
 	bool hitWall = false;
 	bool hitObject = false;      // bool to see if an object was hit
@@ -143,8 +143,13 @@ bool CPlayer::raycastShoot(vector3D facingVector, vector3D dummyPosition, vector
 				hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, target[i].xSize, target[i].ySize, target[i].zSize, target[i].xPosition, target[i].yPosition, target[i].zPosition, 0.05f);
 				if (hitObject)
 				{
+					bulletTracer->AttachToParent(target[i].robberTarget);
 					bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
-					//cout << testPointX << ", " << testPointY << ", " << testPointZ << endl;
+
+					float tempX = bulletTracer->GetX();
+					float tempY = bulletTracer->GetY();
+					float tempZ = bulletTracer->GetZ();
+
 					target[i].currentTargetState = hit;
 					//cube[i]->SetY(20.0f);
 
