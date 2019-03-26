@@ -9,6 +9,7 @@ public:
 	float mMoveSpeed;
 	bool mPlayerOnGround;
 	bool mSoundEnabled;
+	bool mPlayerFlashed;
 	float mJumpSpeed;
 	float mFallSpeed;
 	float mLookSpeed;

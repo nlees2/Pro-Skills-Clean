@@ -45,6 +45,7 @@ void main()
 	CPlayer myPlayer(frameTime, myEngine);
 	myPlayer.currentPlayerState = notPlaying;
 	myPlayer.mSoundEnabled = true;
+	myPlayer.mPlayerFlashed = false;
 
 	CAmmoClip ammoClip[kNumAmmoClips];
 	for (int i = 0; i < kNumAmmoClips; i++)
@@ -62,6 +63,7 @@ void main()
 	for (int i = 0; i < kNumGrenades; i++)
 	{
 		grenade[i].createGrenade(myEngine, "flashBang.x");
+		grenade[i].grenadeTimer = 1.0f;
 	}
 
 
@@ -171,6 +173,7 @@ void main()
 	IMesh* flashBangMesh = myEngine->LoadMesh("flashBang.x");
 	IMesh* aidenMesh = myEngine->LoadMesh("Block.x");
 	IMesh* bulletMesh = myEngine->LoadMesh("Bullet.x");
+	IMesh* quadMesh = myEngine->LoadMesh("quad.x");
 	IModel* floor = floorMesh->CreateModel(0.0f, 0.0f, 0.0f);			// Creates the floor model
 	IModel* spawnDummy = DummyMesh->CreateModel(0.0f, 00.0f, 0.0f);		// created the spawn location dummy (used to create the box collision for the target range enclosure)
 	IModel* highScoreBox = cubeMesh->CreateModel(20.0f, 5.0f, 54.0f);
@@ -179,7 +182,11 @@ void main()
 	IModel* timeDownBox = halfMenuBoxMesh->CreateModel(0.0f, 2.5f, 54.0f);
 	IModel* soundBox = cubeMesh->CreateModel(30.0f, 5.0f, 54.0f);
 	IModel* aidenBox = cubeMesh->CreateModel(45.0f, 8.0f, -50.0f);
-	//IModel* flashBang = flashBangMesh->CreateModel(0.0f, 5.0f, 0.0f);
+	IModel* flashEffect = quadMesh->CreateModel(0.0f, 0.0f, 0.0f);
+	flashEffect->ScaleX(20.0f);
+	flashEffect->AttachToParent(myPlayer.myCamera->cameraDummy);
+	flashEffect->SetLocalZ(10.0f);
+
 	aidenBox->Scale(0.1);
 	aidenBox->RotateY(180.0);
 	aidenBox->SetSkin("aiden face.png");
@@ -189,6 +196,7 @@ void main()
 	timeUpBox->SetSkin("timeUp.jpg");
 	//timeUpBox->ScaleY(0.5f);
 	timeDownBox->SetSkin("timeDown.jpg");
+	//flashEffect->SetSkin("flashbangBlind.png");
 	//timeDownBox->ScaleY(0.5f);
 
 	soundBox->SetSkin("soundOn.jpg");
@@ -698,6 +706,10 @@ void main()
 			grenadeDropped = true;
 		}
 
+		if (grenadeDropped == true)
+		{
+			grenade[currentGrenade].grenadeTimer -= frameTime;
+		}
 		//grenade[currentGrenade].worldModel->GetMatrix(&gMatrix[0][0]); // calls the matrix for the player, recording both the facing vector and the world position
 
 		vector3D cfacingVector = { cMatrix[2][0], cMatrix[2][1], cMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
@@ -710,12 +722,19 @@ void main()
 			grenade[i].GrenadeGravity(frameTime);
 		}
 
-		if (grenade[currentGrenade].YPos < 10.0f && grenadeDropped == true)
+		if (grenade[currentGrenade].grenadeTimer < 0.0f && grenadeDropped == true)
 		{
 			facingVector = { pMatrix[2][0], pMatrix[2][1], pMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
 			lengthOfFV = sqrt((pMatrix[2][0] * pMatrix[2][0]) + (pMatrix[2][1] * pMatrix[2][1]) + (pMatrix[2][2] * pMatrix[2][2])); // calculates the  length of the facing vector
 			fvNormal = { pMatrix[2][0] / lengthOfFV, pMatrix[2][1] / lengthOfFV, pMatrix[2][2] / lengthOfFV };	// normalizes the facing vector for use in the ray cast
-			grenade[currentGrenade].Detonate(myPlayer.myCamera->cameraDummy, fvNormal, grenade[currentGrenade].worldModel);
+			grenade[currentGrenade].Detonate(myPlayer.myCamera->cameraDummy, fvNormal, grenade[currentGrenade].worldModel, flashEffect, myPlayer.mPlayerFlashed);
+			grenadeDropped = false;
+			grenade[currentGrenade].grenadeTimer = 1.0f;
+		}
+
+		if (myPlayer.mPlayerFlashed == true)
+		{
+			flashEffect->MoveLocalX(-frameTime * 5);
 		}
 
 		// collisions with crates
