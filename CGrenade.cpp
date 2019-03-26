@@ -56,7 +56,7 @@ void CGrenade::SetPosition(int newXPos, int newYPos, int newZPos, int &currentGr
 	currentGrenade = nextInArray(currentGrenade, kNumGrenades);			// sets the current ammo clip to the next in the array, ready for the next reload
 }
 
-void CGrenade::Detonate(IModel* playerModel, vector3D playerFvNormal, IModel* grenade, IModel* &flashEffect, bool &playerFlashed)
+void CGrenade::Detonate(IModel* playerModel, vector3D playerFvNormal, IModel* grenade, IModel* &flashEffect, bool &flashExploded, bool &playerFlashed, bool soundEnabled)
 {
 	//worldModel->LookAt(playerModel);
 
@@ -75,12 +75,13 @@ void CGrenade::Detonate(IModel* playerModel, vector3D playerFvNormal, IModel* gr
 
 	float angle = acos(dotproduct);
 
-	if (dotproduct > 0.2f && playerFlashed == false)
+	if (dotproduct > 0.2f && flashExploded == false)
 	{
 		playerFlashed = true;
 		flashEffect->SetLocalY(10.0f);
 		flashEffect->SetLocalX(40.0f);
 	}
+	flashExploded = true;
 
 	// dot product between nade and player
 

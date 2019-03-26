@@ -135,6 +135,69 @@ void soundMain(activeWeapon currentActiveWeapon, int ammo, weaponState currentWe
 	}
 }
 
+void soundGrenade(bool flashSeen, bool soundEnabled)
+{
+	//****************
+	// Buffers
+
+	// Load a sound file into a sound buffer
+	// Supports WAV, OGG/Vorbis, FLAC only. Download Audacity (free) to convert other formats for use (use WAV or OGG)
+
+	if (soundEnabled == true)
+	{
+	  if (flashSeen == true)
+	  {
+	  
+	  	if (!buffer.loadFromFile("flashbangBlindSound.flac"))
+	  	{
+	  		cout << "Error loading sound file" << endl;
+	  		while (!_kbhit());
+	  		return;
+	  	}
+	  }
+	  else if (flashSeen == false)
+	  {
+		  if (!buffer.loadFromFile("flashbangNotBlindSound.flac"))
+		  {
+			  cout << "Error loading sound file" << endl;
+			  while (!_kbhit());
+			  return;
+		  }
+	  
+	  }
+	  
+	  	
+	  	
+	  
+	  	//****************
+	  	// Sources
+	  
+	  	// Indicate that our sound source will use the buffer we just loaded
+	  	sound.setBuffer(buffer);
+	  
+	  	// Set the properties of the source. Details of all available properties are in the SFML documentation of the Sound class
+	  	sound.setVolume(100.0f); // 0 to 100
+	  	sound.setPitch(1.0f);
+	  	sound.setLoop(false);
+	  	sound.setPosition(soundPos);
+	  
+	  
+	  	//****************
+	  	// Listener
+	  
+	  	// Set the properties of the listener. These are all the available listener properties
+	  	// Note how this is doen with static member functions - there is no listener variable
+	  	sf::Listener::setGlobalVolume(100.0f); // 0 to 100
+	  	sf::Listener::setPosition(listenerPos);
+	  	sf::Listener::setDirection(listenerForward);
+	  	sf::Listener::setUpVector(listenerUp);
+	  
+	  
+	  	sound.play();;
+	  
+	}
+}
+
 
 // Simple timer function, similar to that in TL-Engine. Used for later exercises
 // Returns time in seconds since it was last called

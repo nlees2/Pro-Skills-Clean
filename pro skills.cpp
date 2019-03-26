@@ -64,6 +64,7 @@ void main()
 	{
 		grenade[i].createGrenade(myEngine, "flashBang.x");
 		grenade[i].grenadeTimer = 1.0f;
+		grenade[i].flashExploded = false;
 	}
 
 
@@ -110,6 +111,7 @@ void main()
 	vector3D dummyPosition;				 // stores the players position in the world
 	float lengthOfFV;					 // calculates the length of the facing vector
 	vector3D fvNormal;					 // normalizes the facing vector
+	
 
 	vector3D gFacingVector;				 // Stores the players facing vector, used in ray tracing for bullet collisions
 	float gLengthOfFV;					 // calculates the length of the facing vector
@@ -698,7 +700,7 @@ void main()
 
 		// flashbang drops
 
-		if (myPlayer.score == 1 && grenadeDropped == false)
+		if (seconds == 50 && grenadeDropped == false)
 		{
 			grenade[currentGrenade].XPos = 0.0f;
 			grenade[currentGrenade].YPos = 80.0f;
@@ -722,14 +724,19 @@ void main()
 			grenade[i].GrenadeGravity(frameTime);
 		}
 
-		if (grenade[currentGrenade].grenadeTimer < 0.0f && grenadeDropped == true)
+		if (grenade[currentGrenade].grenadeTimer < 0.0f && grenadeDropped == true && grenade[currentGrenade].flashExploded == false)
 		{
-			facingVector = { pMatrix[2][0], pMatrix[2][1], pMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
-			lengthOfFV = sqrt((pMatrix[2][0] * pMatrix[2][0]) + (pMatrix[2][1] * pMatrix[2][1]) + (pMatrix[2][2] * pMatrix[2][2])); // calculates the  length of the facing vector
-			fvNormal = { pMatrix[2][0] / lengthOfFV, pMatrix[2][1] / lengthOfFV, pMatrix[2][2] / lengthOfFV };	// normalizes the facing vector for use in the ray cast
-			grenade[currentGrenade].Detonate(myPlayer.myCamera->cameraDummy, fvNormal, grenade[currentGrenade].worldModel, flashEffect, myPlayer.mPlayerFlashed);
+			myPlayer.playerDummy->GetMatrix(&pMatrix[0][0]); // calls the matrix for the player, recording both the facing vector and the world position
+			myPlayer.myCamera->cameraDummy->GetMatrix(&cMatrix[0][0]); // calls the matrix for the camera, recording both the facing vector and the world position
+
+			gFacingVector = { pMatrix[2][0], cMatrix[2][1], pMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
+			gLengthOfFV = sqrt((pMatrix[2][0] * pMatrix[2][0]) + (cMatrix[2][1] * cMatrix[2][1]) + (pMatrix[2][2] * pMatrix[2][2])); // calculates the  length of the facing vector
+			gFvNormal = { pMatrix[2][0] / gLengthOfFV, cMatrix[2][1] / gLengthOfFV, pMatrix[2][2] / gLengthOfFV };	// normalizes the facing vector for use in the ray cast
+			grenade[currentGrenade].Detonate(myPlayer.myCamera->cameraDummy, gFvNormal, grenade[currentGrenade].worldModel, flashEffect, grenade[currentGrenade].flashExploded, myPlayer.mPlayerFlashed, myPlayer.mSoundEnabled);
 			grenadeDropped = false;
 			grenade[currentGrenade].grenadeTimer = 1.0f;
+
+			soundGrenade(myPlayer.mPlayerFlashed, myPlayer.mSoundEnabled);
 		}
 
 		if (myPlayer.mPlayerFlashed == true)
