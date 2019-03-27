@@ -741,7 +741,7 @@ void main()
 
 		if (myPlayer.mPlayerFlashed == true)
 		{
-			flashEffect->MoveLocalX(-frameTime * 5);
+			flashEffect->MoveLocalX(-frameTime * 2);
 		}
 
 		// collisions with crates
