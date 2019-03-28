@@ -28,7 +28,7 @@ void CGrenade::createGrenade(I3DEngine* myEngine, string meshName)
 	worldModel->ScaleZ(0.15f);
 }
 
-void CGrenade::GrenadeGravity(float frameTime)
+void CGrenade::GrenadeGravity(float frameTime, int &currentGrenade)
 {
 	if (YPos >= 1.0f) // checks if the grenade is above the floor
 	{
@@ -43,17 +43,17 @@ void CGrenade::GrenadeGravity(float frameTime)
 
 
 	}
-	worldModel->SetPosition(XPos, YPos, ZPos); // moves the grenade to its new position
+	worldModel->SetPosition(XPos, YPos, ZPos);			// sets the grenades new position
 }
 
-void CGrenade::SetPosition(int newXPos, int newYPos, int newZPos, int &currentGrenade)
+void CGrenade::SetGrenadePosition(int newXPos, int newYPos, int newZPos, int &currentGrenade)
 {
 	XPos = newXPos; // sets the X Position of the current ammo clip
 	YPos = newYPos + 0.5f; // sets the Y Position of the current ammo clip
 	ZPos = newZPos; // sets the Z Position of the current ammo clip
 	rotation = 0.0f;							// sets the rotation variable of the ammo clip to upright
-	worldModel->ResetOrientation();			// resets teh ammo clips orientation
-	currentGrenade = nextInArray(currentGrenade, kNumGrenades);			// sets the current ammo clip to the next in the array, ready for the next reload
+
+	
 }
 
 void CGrenade::Detonate(IModel* playerModel, vector3D playerFvNormal, IModel* grenade, IModel* &flashEffect, bool &flashExploded, bool &playerFlashed, bool soundEnabled)

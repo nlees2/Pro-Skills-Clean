@@ -81,6 +81,7 @@ void main()
 	int currentGrenade = 0;
 	int temp; // used for reassigning values
 	bool grenadeDropped = false;
+	float flashedTimer = 5.0f;
 
 	int bulletTracerSelection = 0;  // this int will cycle through the numbers 0 - kNumAmmoClips and choose which model to move to each bullet hole
 
@@ -187,7 +188,7 @@ void main()
 	IModel* flashEffect = quadMesh->CreateModel(0.0f, 0.0f, 0.0f);
 	flashEffect->ScaleX(20.0f);
 	flashEffect->AttachToParent(myPlayer.myCamera->cameraDummy);
-	flashEffect->SetLocalZ(10.0f);
+	flashEffect->SetLocalZ(7.5f);
 
 	aidenBox->Scale(0.1);
 	aidenBox->RotateY(180.0);
@@ -721,7 +722,7 @@ void main()
 
 		for (int i = 0; i < kNumGrenades; i++)
 		{
-			grenade[i].GrenadeGravity(frameTime);
+			grenade[i].GrenadeGravity(frameTime, currentGrenade);
 		}
 
 		if (grenade[currentGrenade].grenadeTimer < 0.0f && grenadeDropped == true && grenade[currentGrenade].flashExploded == false)
@@ -742,6 +743,14 @@ void main()
 		if (myPlayer.mPlayerFlashed == true)
 		{
 			flashEffect->MoveLocalX(-frameTime * 2);
+			flashedTimer -= frameTime;
+		}
+
+		if (flashedTimer < 0.0f && myPlayer.mPlayerFlashed == true)
+		{
+			myPlayer.mPlayerFlashed = false;
+			currentGrenade = nextInArray(currentGrenade, kNumGrenades);			// sets the current grenade to the next in the array, ready for the next drop
+			flashedTimer = 5.0f;
 		}
 
 		// collisions with crates

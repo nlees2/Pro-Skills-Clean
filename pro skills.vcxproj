@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ProgramData\TL-Engine\include;D:\NAPoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ProgramData\TL-Engine\include;D:\NApoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <PrecompiledHeader>
@@ -77,7 +77,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\ProgramData\TL-Engine\lib;D:\NAPoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\ProgramData\TL-Engine\lib;D:\NApoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)pro skills.pdb</ProgramDatabaseFile>
       <DataExecutionPrevention>

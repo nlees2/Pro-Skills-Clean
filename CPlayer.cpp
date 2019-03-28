@@ -143,8 +143,10 @@ bool CPlayer::raycastShoot(vector3D facingVector, vector3D dummyPosition, vector
 				hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, target[i].xSize, target[i].ySize, target[i].zSize, target[i].xPosition, target[i].yPosition, target[i].zPosition, 0.05f);
 				if (hitObject)
 				{
+
+
 					bulletTracer->AttachToParent(target[i].robberTarget);
-					bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
+					bulletTracer->SetPosition(testPointX - rayTrace.x, testPointY + 22.0, testPointZ - rayTrace.z);
 
 					float tempX = bulletTracer->GetX();
 					float tempY = bulletTracer->GetY();
