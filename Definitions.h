@@ -6,6 +6,7 @@
 const int kWallQuantity = 4;	  // number of walls, used in the inner area to enclose the player
 const int kCrateQuantity = 25;	  // number of tall crates
 const int kNumBulletTracers = 10; // number of bullet tracers
+const int kNumNameBoxes = 4;		// number of name letter boxes for inputting a name
 const int kNumBullets = 10;			// number of bullet casings
 const int kNumGrenades = 5;
 const int kNumRobberTargets = 12; // number of targets

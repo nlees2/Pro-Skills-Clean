@@ -217,6 +217,21 @@ int nextInArray(int i, int arraySize) // Function to select the next point in a 
 	return nextCheckpoint;
 }
 
+int previousInArray(int i, int arraySize) // Function to select the previous point in a patrol (or cycle through any array)
+{
+	int lastCheckpoint = i; // number in the array for current checkpoint (one reached)
+	int previousCheckpoint;  // number in the array for the next checkpoint
+
+	previousCheckpoint = (lastCheckpoint - 1) % arraySize;  // cycles to the previous member of the array using modulus (remainder) 0>1>2>3>4>0
+
+	if (previousCheckpoint == -1)
+	{
+		previousCheckpoint = 25;
+	}
+
+	return previousCheckpoint;
+}
+
 //void fireWeapon(player player, IModel* playerDummy, IModel* cameraDummy, IModel* bulletTracer[], vector3D facingVector, float lengthOfFV, vector3D fvNormal, vector3D dummyPosition, int bulletTracerSelection, const int kNumBulletTracers, string mapName,
 //				wall mapWall,)
 //{

@@ -177,6 +177,7 @@ void main()
 	IMesh* aidenMesh = myEngine->LoadMesh("Block.x");
 	IMesh* bulletMesh = myEngine->LoadMesh("Bullet.x");
 	IMesh* quadMesh = myEngine->LoadMesh("quad.x");
+	IMesh* scrollBlockMesh = myEngine->LoadMesh("scrollBlock.x");
 	IModel* floor = floorMesh->CreateModel(0.0f, 0.0f, 0.0f);			// Creates the floor model
 	IModel* spawnDummy = DummyMesh->CreateModel(0.0f, 00.0f, 0.0f);		// created the spawn location dummy (used to create the box collision for the target range enclosure)
 	IModel* highScoreBox = cubeMesh->CreateModel(20.0f, 5.0f, 54.0f);
@@ -206,6 +207,10 @@ void main()
 																		//desertEagle.model = desertEagleMesh->CreateModel(0.0f, -5.0f, 0.0f);// Creates the Desert Eagle (under the map)
 	IModel* crate[kCrateQuantity];										// Declares the wooden crate models
 	IModel* bulletTracer[kNumBulletTracers];							// Declares the bullet tracer models
+	IModel* nameBox[kNumNameBoxes];
+	IModel* leftScrollBox[kNumNameBoxes];
+	IModel* rightScrollBox[kNumNameBoxes];
+	int letterSelect[kNumNameBoxes]{ 0,0,0,0 };
 
 	M4Colt.createWeapon(myEngine, 20, true, 0.15f, active, "M4Colt.x", myPlayer, 10.0f);
 	desertEagle.createWeapon(myEngine, 7, false, 0.15f, inactive, "Desert_Eagle.x", myPlayer, -10.0f);
@@ -223,6 +228,16 @@ void main()
 	{
 		bulletTracer[i] = bulletMesh->CreateModel(0.0f, -10.0f, 0.0f); // hides the bullet tracers under the world at game start
 		bulletTracer[i]->Scale(0.1f);
+	}
+
+	for (int i = 0; i < kNumNameBoxes; i++)
+	{
+		nameBox[i] = cubeMesh->CreateModel(54.0f, 5.0f, (i * 20) - 30); // hides the bullet tracers under the world at game start
+		nameBox[i]->SetSkin("letterA.jpg");
+		leftScrollBox[i] = scrollBlockMesh->CreateModel(51.5f, 5.0f, (i * 20) - 22.5);
+		leftScrollBox[i]->SetSkin("leftArrow.jpg");
+		rightScrollBox[i] = scrollBlockMesh->CreateModel(51.5f, 5.0f, (i * 20) - 37.5);
+		rightScrollBox[i]->SetSkin("rightArrow.jpg");
 	}
 
 	// craetes the models for the walls
@@ -382,7 +397,15 @@ void main()
 
 		if (myEngine->KeyHit(kQuitKey)) //Quits the game
 		{
-			myPlayer.SaveHighScore(highScores, myPlayer, startTime - time);
+			if (myPlayer.currentPlayerState == playing)
+			{
+				string playerName;
+				for (int i = kNumNameBoxes - 1; i >= 0; i--)
+				{
+					playerName.push_back((char)(letterSelect[i] + 65));
+				}
+				myPlayer.SaveHighScore(highScores, myPlayer, startTime - time, playerName);
+			}
 			myEngine->Stop();
 		}
 
@@ -481,6 +504,31 @@ void main()
 				myPlayer.mSoundEnabled = false;
 
 			}
+			for (int i = 0; i < kNumNameBoxes; i++)
+			{
+				if (myPlayer.raycastName(fvNormal, dummyPosition, leftScrollBox[i], bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
+				{
+					letterSelect[i] = previousInArray(letterSelect[i], 26);
+					char boxChar = (char)(letterSelect[i] + 65);
+
+					string letterFile = "letter";
+					letterFile.push_back(boxChar);
+					letterFile = letterFile + ".jpg";
+					nameBox[i]->SetSkin(letterFile);
+				}
+				if (myPlayer.raycastName(fvNormal, dummyPosition, rightScrollBox[i], bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
+				{
+					letterSelect[i] = nextInArray(letterSelect[i], 26);
+					char boxChar = (char)(letterSelect[i] + 65);
+
+					string letterFile = "letter";
+					letterFile.push_back(boxChar);
+					letterFile = letterFile + ".jpg";
+					nameBox[i]->SetSkin(letterFile);
+				}
+
+			}
+
 		}
 
 		if (time > 0.0f && myPlayer.currentPlayerState == playing)
@@ -489,7 +537,12 @@ void main()
 		}
 		if (time < 0.0f && myPlayer.currentPlayerState == playing)
 		{
-			myPlayer.SaveHighScore(highScores, myPlayer, startTime - time);
+			string playerName;
+			for (int i = kNumNameBoxes - 1; i >= 0; i--)
+			{
+				playerName.push_back((char)(letterSelect[i] + 65));
+			}
+			myPlayer.SaveHighScore(highScores, myPlayer, startTime - time, playerName);
 			myPlayer.currentPlayerState = notPlaying;
 
 		}
@@ -598,6 +651,30 @@ void main()
 				{
 					bulletTracer[i]->SetSkin("aiden face.png");
 				}
+			}
+			for (int i = 0; i < kNumNameBoxes; i++)
+			{
+				if (myPlayer.raycastName(fvNormal, dummyPosition, leftScrollBox[i], bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
+				{
+					letterSelect[i] = previousInArray(letterSelect[i], 26);
+					char boxChar = (char)(letterSelect[i] + 65);
+
+					string letterFile = "letter";
+					letterFile.push_back(boxChar);
+					letterFile = letterFile + ".jpg";
+					nameBox[i]->SetSkin(letterFile);
+				}
+				if (myPlayer.raycastName(fvNormal, dummyPosition, rightScrollBox[i], bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
+				{
+					letterSelect[i] = nextInArray(letterSelect[i], 26);
+					char boxChar = (char)(letterSelect[i] + 65);
+
+					string letterFile = "letter";
+					letterFile.push_back(boxChar);
+					letterFile = letterFile + ".jpg";
+					nameBox[i]->SetSkin(letterFile);
+				}
+
 			}
 		}
 

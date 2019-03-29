@@ -283,6 +283,61 @@ bool CPlayer::raycastMenu(vector3D facingVector, vector3D dummyPosition, IModel*
 	return false;
 }
 
+bool CPlayer::raycastName(vector3D facingVector, vector3D dummyPosition, IModel* &target, IModel* bulletTracer, CPlayer myplayer, int blockYSize)
+{
+
+	//int gunDamage = 1;
+	//float fireRate = 0.25f;
+	float weaponRange = 200.0f;  // the distance that the ray will travel, longer range means more calculations
+								 //float hitForce = 100.0f;
+	bool hitWall = false;
+	bool hitObject = false;      // bool to see if an object was hit
+	float distToObject = 1.0f;	 // the value incremented for the ray trace (how far the ray travels before being checked) 
+
+
+	float testPointX;
+	float testPointY;
+	float testPointZ;
+
+	vector3D rayTrace;
+
+
+	rayTrace.x = facingVector.x * distToObject;
+	rayTrace.y = facingVector.y * distToObject;
+	rayTrace.z = (facingVector.z * distToObject);
+
+	testPointX = dummyPosition.x + rayTrace.x;
+	testPointY = dummyPosition.y + rayTrace.y;
+	testPointZ = dummyPosition.z + rayTrace.z;
+
+
+
+	for (distToObject = 0; distToObject < weaponRange; distToObject++)
+		//while (!hitObject && distToObject < rayLength)
+	{
+		//distToObject += 1.0f;
+		testPointX += rayTrace.x;
+		testPointY += rayTrace.y;
+		testPointZ += rayTrace.z;
+
+		hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, 5.0f, blockYSize, 5.0f, target->GetX(), target->GetY(), target->GetZ(), 0.05f);
+		if (hitObject)
+		{
+			return true;
+		}
+
+
+	}
+
+	testPointX = dummyPosition.x + rayTrace.x;
+	testPointY = dummyPosition.y + rayTrace.y;
+	testPointZ = dummyPosition.z + rayTrace.z;
+	////////////////////////////////////////
+
+
+	return false;
+}
+
 collisionSide CPlayer::SphereToBox(float playerX, float playerZ, float cubeXLength, float cubeZLength, float cubeXPos, float cubeZPos, float playerRadius, float playerOldX, float playerOldZ)
 {
 	float minX = cubeXPos - (cubeXLength / 2.0f);			// Runs a sphere to box collision detection
@@ -410,7 +465,7 @@ void CPlayer::LoadHighScore(vector<highScore> &highScores)
 
 }
 
-void CPlayer::SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer, float time)
+void CPlayer::SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer, float time, string playerName)
 {
 	ofstream fileInput;
 	fileInput.open("highscores.txt"); // opens the input file
@@ -421,7 +476,7 @@ void CPlayer::SaveHighScore(vector<highScore> &highScores, CPlayer currentPlayer
 	
 	}
 	highScore playerScore;
-	playerScore.name = currentPlayer.name;
+	playerScore.name = playerName;
 	playerScore.score = currentPlayer.score;
 	playerScore.time = time;
 	playerScore.killsPerMinute = playerScore.score / (playerScore.time / 60);
