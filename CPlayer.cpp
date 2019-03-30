@@ -267,7 +267,6 @@ bool CPlayer::raycastMenu(vector3D facingVector, vector3D dummyPosition, IModel*
 			hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, 10.0f, blockYSize, 1.0f, target->GetX(), target->GetY(), target->GetZ(), 0.05f);
 			if (hitObject)
 			{
-				bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
 				return true;
 			}
 			

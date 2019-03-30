@@ -97,9 +97,14 @@ void main()
 	stringstream reloadText; // screen reload output
 	stringstream timeText;  // screen timer output
 	stringstream highScoreText; // high score output
+	stringstream hsTimeText;  // 
+	stringstream nameText;
+	stringstream kpmText;
 	stringstream fpsText;   // screen fps output
 	ISprite* crosshair;     // players crosshair
 	ISprite* flashBlind;
+	ISprite* scoresPopUp;
+	ISprite* helpPopUp;
 
 	string mapName; // name of the map file to be read in (initialized in read map function)
 
@@ -141,6 +146,8 @@ void main()
 	collisions mapWallBox;
 
 	crosshair = myEngine->CreateSprite("crosshair.png", (resolutionX / 2) - 15, (resolutionY / 2.0f) - 17, 0.1f); // displays a crosshair in the center of the screen
+	scoresPopUp = myEngine->CreateSprite("highScorePopUP.png", 50.0f, 100.0f, -0.1f);
+	helpPopUp = myEngine->CreateSprite("helpPopUP.png", 50.0f, 50.0f, -0.1f);
 
 	//flashBlind = myEngine->CreateSprite("flashbangBlind.png", 0.0f, 0.0f, 0.1f);
 
@@ -156,6 +163,7 @@ void main()
 	int minutes;						  // number of minutes remaining in time (time / 60)
 	int seconds;						  // number of seconds in time			 (time % 60)
 	bool highScoreDisplay = false;
+	bool helpDisplay = false;
 
 	IFont* myFont = myEngine->LoadFont("Comic Sans MS", 36); // Declares the font and font size used when outputting text
 	IFont* highScoreFont = myEngine->LoadFont("Comic Sans MS", 80); // Declares the font and font size used when outputting text
@@ -185,6 +193,7 @@ void main()
 	IModel* timeUpBox = halfMenuBoxMesh->CreateModel(0.0f, 7.5f, 54.0f);
 	IModel* timeDownBox = halfMenuBoxMesh->CreateModel(0.0f, 2.5f, 54.0f);
 	IModel* soundBox = cubeMesh->CreateModel(30.0f, 5.0f, 54.0f);
+	IModel* helpBox = cubeMesh->CreateModel(40.0f, 5.0f, 54.0f);
 	IModel* aidenBox = cubeMesh->CreateModel(45.0f, 8.0f, -50.0f);
 	IModel* flashEffect = quadMesh->CreateModel(0.0f, 0.0f, 0.0f);
 	flashEffect->ScaleX(20.0f);
@@ -196,10 +205,11 @@ void main()
 	aidenBox->SetSkin("aiden face.png");
 
 	highScoreBox->SetSkin("highScoresOff.jpg");
-	startBox->SetSkin("startOff.jpg");
+	startBox->SetSkin("startOn.jpg");
 	timeUpBox->SetSkin("timeUp.jpg");
 	//timeUpBox->ScaleY(0.5f);
 	timeDownBox->SetSkin("timeDown.jpg");
+	helpBox->SetSkin("helpOff.jpg");
 	//flashEffect->SetSkin("flashbangBlind.png");
 	//timeDownBox->ScaleY(0.5f);
 
@@ -267,7 +277,7 @@ void main()
 		mapTarget[i].robberTarget->ScaleY(1.2f);
 		mapTarget[i].robberTarget->ScaleX(1.2f);
 		mapTarget[i].robberTarget->ScaleZ(0.2f);
-		mapTarget[i].robberTarget->SetSkin("robber.png"); // skins the target to look like a robber (enemy)
+		mapTarget[i].robberTarget->SetSkin("robber.jpg"); // skins the target to look like a robber (enemy)
 
 		mapTarget[i].currentTargetState = waiting; // sets the state of the target to waiting
 		mapTarget[i].resetTimer = 0;			   // sets the reset timer to 0
@@ -344,13 +354,39 @@ void main()
 
 		if (highScoreDisplay == true)
 		{
+			scoresPopUp->SetZ(0.1f);
+
 			for (int i = 0; i < NUMBEROFHIGHSCORES; i++)
 			{
-				//highScoreText << i + 1 << ". " << "Name: " << highScores[i].name << " Score: " << highScores[i].score << " Time: " << highScores[i].time << " Kills Per Min:  " << highScores[i].killsPerMinute;
-				highScoreText << i + 1 << ". "<< highScores[i].name << ": " << highScores[i].score;
-				highScoreFont->Draw(highScoreText.str(), 50.0f, i * 80.0f + 120.0f);
+				
+				highScoreText << "            " << highScores[i].name;
+				scoreText << "            " << highScores[i].score;
+				hsTimeText << "                  " << roundf(highScores[i].time);
+				kpmText << "              " << roundf(highScores[i].killsPerMinute);
+				//highScoreText << i + 1 << ". "<< highScores[i].name << ": " << highScores[i].score;
+
+				highScoreFont->Draw(highScoreText.str(), 0.0f, i * 78.0f + 192.0f);
 				highScoreText.str("");
+				highScoreFont->Draw(scoreText.str(), 500.0f, i * 78.0f + 192.0f);
+				scoreText.str("");
+				highScoreFont->Draw(hsTimeText.str(), 800.0f, i * 78.0f + 192.0f);
+				hsTimeText.str("");
+				highScoreFont->Draw(kpmText.str(), 1300.0f, i * 78.0f + 192.0f);
+				kpmText.str("");
 			}
+		}
+		else
+		{
+			scoresPopUp->SetZ(-0.1f);
+		}
+
+		if (helpDisplay == true)
+		{
+			helpPopUp->SetZ(0.1f);
+		}
+		else
+		{
+			helpPopUp->SetZ(-0.1f);
 		}
 
 		// Draw the scene
@@ -470,7 +506,7 @@ void main()
 			{
 				time = startTime; 
 				myPlayer.currentPlayerState = notPlaying;
-				startBox->SetSkin("startOff.jpg");
+				startBox->SetSkin("startOn.jpg");
 			}
 			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying)
 			{
@@ -479,7 +515,7 @@ void main()
 				myPlayer.currentPlayerState = playing;
 				time = startTime;
 				myPlayer.score = 0;
-				startBox->SetSkin("startOn.jpg");
+				startBox->SetSkin("startOff.jpg");
 			}
 			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime < MAXSTARTTIME)
 			{
@@ -503,6 +539,16 @@ void main()
 				soundBox->SetSkin("soundOff.jpg");
 				myPlayer.mSoundEnabled = false;
 
+			}
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, helpBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && helpDisplay == false)
+			{
+				helpBox->SetSkin("help.jpg");
+				helpDisplay = true;
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, helpBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && helpDisplay == true)
+			{
+				helpBox->SetSkin("helpOff.jpg");
+				helpDisplay = false;
 			}
 			for (int i = 0; i < kNumNameBoxes; i++)
 			{
@@ -611,7 +657,7 @@ void main()
 			{
 				time = startTime;
 				myPlayer.currentPlayerState = notPlaying;
-				startBox->SetSkin("startOff.jpg");
+				startBox->SetSkin("startOn.jpg");
 			}
 			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying)
 			{
@@ -620,7 +666,7 @@ void main()
 				myPlayer.currentPlayerState = playing;
 				time = startTime;
 				myPlayer.score = 0;
-				startBox->SetSkin("startOn.jpg");
+				startBox->SetSkin("startOff.jpg");
 			}
 			if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime < MAXSTARTTIME)
 			{
@@ -644,6 +690,16 @@ void main()
 				soundBox->SetSkin("soundOff.jpg");
 				myPlayer.mSoundEnabled = false;
 
+			}
+			if (myPlayer.raycastMenu(fvNormal, dummyPosition, helpBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && helpDisplay == false)
+			{
+				helpBox->SetSkin("help.jpg");
+				helpDisplay = true;
+			}
+			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, helpBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && helpDisplay == true)
+			{
+				helpBox->SetSkin("helpOff.jpg");
+				helpDisplay = false;
 			}
 			if (myPlayer.raycastMenu(fvNormal, dummyPosition, aidenBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
 			{
@@ -771,7 +827,7 @@ void main()
 			}
 			else
 			{
-				mapTarget[i].robberTarget->SetSkin("robber.png");  // sets the skin to show a robber
+				mapTarget[i].robberTarget->SetSkin("robber.jpg");  // sets the skin to show a robber
 			}
 
 		}
