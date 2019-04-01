@@ -1,31 +1,142 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (pro skills rebuilt.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (pro skills rebuilt.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  CAmmoClip.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
+  Compiling...
   pro skills.cpp
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(148): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(245): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(247): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(249): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(271): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(274): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(344): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(368): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(370): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(372): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(374): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(643): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(775): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(789): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(903): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(218): warning C4101: 'crate': unreferenced local variable
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(105): warning C4101: 'flashBlind': unreferenced local variable
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(171): warning C4101: 'mouseMovement': unreferenced local variable
-c:\users\nick\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(93): warning C4101: 'gMatrix': unreferenced local variable
-  pro skills.vcxproj -> C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\\pro skillsDebug.exe
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(150): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(248): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(250): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(252): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(269): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(270): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(271): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(277): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(280): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(350): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(374): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(376): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(378): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(380): warning C4244: 'argument': conversion from 'float' to 'const int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(651): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(786): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(800): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(914): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(220): warning C4101: 'crate': unreferenced local variable
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(106): warning C4101: 'flashBlind': unreferenced local variable
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(173): warning C4101: 'mouseMovement': unreferenced local variable
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\pro skills.cpp(94): warning C4101: 'gMatrix': unreferenced local variable
+  Functions.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(54): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(56): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(73): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(76): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(79): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(81): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(84): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(122): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.cpp(125): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  CWeapon.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  CPlayer.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(62): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(143): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(143): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(149): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(216): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(223): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(236): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(314): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(317): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(369): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(369): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(424): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(424): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(525): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(545): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cplayer.cpp(582): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  CModel.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cmodel.cpp(76): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cmodel.cpp(90): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  CGrenade.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cgrenade.cpp(51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cgrenade.cpp(53): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  CCamera.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  CBullet.cpp
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\definitions.h(19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(23): warning C4091: 'extern ': ignored on left of 'vector2D' when no variable is declared
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(69): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(70): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\functions.h(71): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cbullet.cpp(61): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\napoole\desktop\pro-skills-clean-flashbangs-and-stuff\cbullet.cpp(63): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+  pro skills.vcxproj -> D:\NAPoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\\pro skillsDebug.exe
   Copying DLLs & shaders...

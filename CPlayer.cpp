@@ -29,7 +29,7 @@ void CPlayer::timers(float &frameTime, I3DEngine* myEngine)
 	mPlayerOnGround = true;
 	mJumpSpeed = (gameSpeed * frameTime) * 3.0f;
 	mFallSpeed = (gameSpeed * frameTime) * 1.5f;
-	mLookSpeed = (gameSpeed * frameTime) * 3.0f;
+	mLookSpeed = (gameSpeed * frameTime) * mSensitivity;
 	//mJumpTimer = 0;
 }
 
@@ -148,6 +148,7 @@ bool CPlayer::raycastShoot(vector3D facingVector, vector3D dummyPosition, vector
 					bulletTracer->AttachToParent(target[i].robberTarget);
 					bulletTracer->SetPosition(testPointX - rayTrace.x, testPointY + 22.0, testPointZ - rayTrace.z);
 
+
 					float tempX = bulletTracer->GetX();
 					float tempY = bulletTracer->GetY();
 					float tempZ = bulletTracer->GetZ();
@@ -161,6 +162,107 @@ bool CPlayer::raycastShoot(vector3D facingVector, vector3D dummyPosition, vector
 
 		}
 
+		testPointX = dummyPosition.x + rayTrace.x;
+		testPointY = dummyPosition.y + rayTrace.y;
+		testPointZ = dummyPosition.z + rayTrace.z;
+		////////////////////////////////////////
+
+	}
+	return false;
+}
+
+bool CPlayer::raycastBox(vector3D facingVector, vector3D dummyPosition, vector<model> &box, IModel* bulletTracer, const int kboxQuantity, CPlayer myplayer)
+{
+
+	//int gunDamage = 1;
+	//float fireRate = 0.25f;
+	bool boxHit = false;
+	float weaponRange = 300.0f;  // the distance that the ray will travel, longer range means more calculations
+								 //float hitForce = 100.0f;
+	bool hitWall = false;
+	bool hitObject = false;      // bool to see if an object was hit
+	float distToObject = 0.6f;	 // the value incremented for the ray trace (how far the ray travels before being checked) 
+
+
+	float testPointX;
+	float testPointY;
+	float testPointZ;
+
+	vector3D rayTrace;
+
+
+	rayTrace.x = facingVector.x * distToObject;
+	rayTrace.y = facingVector.y * distToObject;
+	rayTrace.z = (facingVector.z * distToObject);
+
+	testPointX = dummyPosition.x + rayTrace.x;
+	testPointY = dummyPosition.y + rayTrace.y;
+	testPointZ = dummyPosition.z + rayTrace.z;
+
+	for (int i = 0; i < kboxQuantity; i++)
+	{
+		if (boxHit == false)
+		{
+			for (distToObject = 0; distToObject < weaponRange; distToObject++)
+				//while (!hitObject && distToObject < rayLength)
+			{
+
+				//distToObject += 1.0f;
+				testPointX += rayTrace.x;
+				testPointY += rayTrace.y;
+				testPointZ += rayTrace.z;
+
+				//hitObject = SphereToBox2(testPointX, testPointY + 22.0, testPointZ, box[i].xSize, box[i].ySize, box[i].zSize, box[i].XPos, (box[i].YPos + (box[i].ySize / 2) ), box[i].ZPos, 0.05f);
+				collisionSide sideHit = SphereToBox3D(testPointX, testPointY + 22, testPointZ, box[i].xSize, box[i].ySize, box[i].zSize, box[i].XPos, (box[i].YPos + box[i].ySize / 2), box[i].ZPos, 0.05f, (testPointX - rayTrace.x), (testPointZ - rayTrace.z));
+
+				bulletTracer->ResetOrientation();
+
+				if (sideHit == frontSide || sideHit == backSide)
+				{
+					bulletTracer->DetachFromParent();
+					bulletTracer->SetPosition(testPointX - rayTrace.x, testPointY + 22.0, testPointZ - rayTrace.z);
+
+					float tempX = bulletTracer->GetX();
+					float tempY = bulletTracer->GetY();
+					float tempZ = bulletTracer->GetZ();
+
+					boxHit = true;
+
+					return true;
+				}
+				else if (sideHit == leftSide || sideHit == rightSide)
+				{
+					bulletTracer->DetachFromParent();
+					bulletTracer->SetPosition(testPointX - rayTrace.x, testPointY + 22.0, testPointZ - rayTrace.z);
+					bulletTracer->RotateY(90.0f);
+
+
+					float tempX = bulletTracer->GetX();
+					float tempY = bulletTracer->GetY();
+					float tempZ = bulletTracer->GetZ();
+
+					boxHit = true;
+
+					return true;
+				}
+
+				/*if (hitObject)
+				{
+
+					bulletTracer->DetachFromParent();
+					bulletTracer->SetPosition(testPointX, testPointY + 22.0, testPointZ);
+
+
+					float tempX = bulletTracer->GetX();
+					float tempY = bulletTracer->GetY();
+					float tempZ = bulletTracer->GetZ();
+
+					return true;
+				}*/
+
+
+			}
+		}
 		testPointX = dummyPosition.x + rayTrace.x;
 		testPointY = dummyPosition.y + rayTrace.y;
 		testPointZ = dummyPosition.z + rayTrace.z;
@@ -348,6 +450,31 @@ collisionSide CPlayer::SphereToBox(float playerX, float playerZ, float cubeXLeng
 
 	if ((playerX > minX - playerRadius && playerX < maxX + playerRadius) && // The function checks if the sphere, created with an objects position and radius, is overlapping the box
 		(playerZ > minZ - playerRadius && playerZ < maxZ + playerRadius))
+	{
+		if (playerOldX < minX) result = leftSide;
+		else if (playerOldX > maxX) result = rightSide;
+		else if (playerOldZ < minZ) result = frontSide;
+		else if (playerOldZ > maxZ)  result = backSide;
+	}
+
+	return  (result);
+
+}
+
+collisionSide CPlayer::SphereToBox3D(float playerX, float playerY, float playerZ, float cubeXLength, float cubeYLength, float cubeZLength, float cubeXPos, float cubeYPos, float cubeZPos, float playerRadius, float playerOldX, float playerOldZ)
+{
+	float minX = cubeXPos - (cubeXLength / 2.0f);			// Runs a sphere to box collision detection
+	float maxX = cubeXPos + (cubeXLength / 2.0f);			// The bounding box is created using the objects position, its width, and its length.
+	float minZ = cubeZPos - (cubeZLength / 2.0f);
+	float maxZ = cubeZPos + (cubeZLength / 2.0f);
+	float minY = cubeYPos - (cubeYLength / 2.0f);
+	float maxY = cubeYPos + (cubeYLength / 2.0f);
+
+	collisionSide result = noSide;
+
+	if ((playerX > minX - playerRadius && playerX < maxX + playerRadius) && // The function checks if the sphere, created with an objects position and radius, is overlapping the box
+		(playerZ > minZ - playerRadius && playerZ < maxZ + playerRadius) &&
+		(playerY > minY - playerRadius && playerY < maxY + playerRadius))
 	{
 		if (playerOldX < minX) result = leftSide;
 		else if (playerOldX > maxX) result = rightSide;
