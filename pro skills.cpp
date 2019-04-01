@@ -14,6 +14,7 @@ using namespace tle;
 
 void main()
 {
+	//yg7ytg
 
 	int resolutionX = 1920; // X size of the game window
 	int resolutionY = 1080; // Y size of the game window
