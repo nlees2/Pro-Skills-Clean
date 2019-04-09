@@ -32,6 +32,7 @@ const EKeyCode kReloadKey = Key_R;		//reloads the players weapon
 const EKeyCode kFireKey = Mouse_LButton;//fires the weapon
 const EKeyCode kWeapon1Key = Key_1;		//selects the M4Colt
 const EKeyCode kWeapon2Key = Key_2;		//Selects the Desert Eagle
+const EKeyCode kWeapon3Key = Key_3;		//Selects the confetti Cannon
 
 										///////////// Enums
 
@@ -42,7 +43,7 @@ enum playerState { playing, notPlaying };
 
 enum weaponState { active, inactive, reloading };
 
-enum activeWeapon { M4ColtWeapon, desertEagleWeapon };
+enum activeWeapon { M4ColtWeapon, desertEagleWeapon, confettiCannonWeapon };
 
 
 enum collisionSide { leftSide, rightSide, frontSide, backSide, noSide };

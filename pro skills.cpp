@@ -10,6 +10,7 @@
 #include "CBullet.h"
 #include "Sound.h"
 #include "CGrenade.h"
+#include "particleEffect.h"
 using namespace std;
 using namespace tle;
 
@@ -41,12 +42,12 @@ void main()
 	CWeapon M4Colt;
 	CWeapon desertEagle;
 	CWeapon currentWeapon;
+	CWeapon confettiCannon;
 
 	CPlayer myPlayer(frameTime, myEngine);
 	myPlayer.currentPlayerState = notPlaying;
 	myPlayer.mSoundEnabled = true;
 	myPlayer.mPlayerFlashed = false;
-	myPlayer.mSensitivity = 3.0f;
 
 	CAmmoClip ammoClip[kNumAmmoClips];
 	for (int i = 0; i < kNumAmmoClips; i++)
@@ -132,7 +133,6 @@ void main()
 
 	using box = vector<model>;
 	box mapBox;					// creates a vector storing all boxes on the map
-
 	float boxXSize = 15.0f;		// and initializes all of their sizes
 	float boxYSize = 22.5f;
 	float boxZSize = 15.0f;
@@ -185,7 +185,7 @@ void main()
 	IMesh* sqaureWallMesh = myEngine->LoadMesh("squareWall.x");			// taller wall mesh
 	IMesh* flashBangMesh = myEngine->LoadMesh("flashBang.x");
 	IMesh* aidenMesh = myEngine->LoadMesh("Block.x");
-	IMesh* bulletMesh = myEngine->LoadMesh("quad.x");
+	IMesh* bulletMesh = myEngine->LoadMesh("Bullet.x");
 	IMesh* quadMesh = myEngine->LoadMesh("quad.x");
 	IMesh* scrollBlockMesh = myEngine->LoadMesh("scrollBlock.x");
 	IModel* floor = floorMesh->CreateModel(0.0f, 0.0f, 0.0f);			// Creates the floor model
@@ -198,6 +198,7 @@ void main()
 	IModel* helpBox = cubeMesh->CreateModel(40.0f, 5.0f, 54.0f);
 	IModel* aidenBox = cubeMesh->CreateModel(45.0f, 8.0f, -50.0f);
 	IModel* flashEffect = quadMesh->CreateModel(0.0f, 0.0f, 0.0f);
+
 	flashEffect->ScaleX(20.0f);
 	flashEffect->AttachToParent(myPlayer.myCamera->cameraDummy);
 	flashEffect->SetLocalZ(7.5f);
@@ -226,6 +227,7 @@ void main()
 
 	M4Colt.createWeapon(myEngine, 20, true, 0.15f, active, "M4Colt.x", myPlayer, 10.0f);
 	desertEagle.createWeapon(myEngine, 7, false, 0.15f, inactive, "Desert_Eagle.x", myPlayer, -10.0f);
+	confettiCannon.createWeapon(myEngine, 1, true, 0.15f, inactive, "M4Colt.x", myPlayer, -10.0f);
 
 	currentWeapon = M4Colt;	// Sets the players current weapon to the M4Colt
 
@@ -240,7 +242,6 @@ void main()
 	{
 		bulletTracer[i] = bulletMesh->CreateModel(0.0f, -10.0f, 0.0f); // hides the bullet tracers under the world at game start
 		bulletTracer[i]->Scale(0.1f);
-		bulletTracer[i]->SetSkin("bulletHole.png");
 	}
 
 	for (int i = 0; i < kNumNameBoxes; i++)
@@ -266,9 +267,6 @@ void main()
 	{
 		mapBox[i].worldModel = crateMesh->CreateModel(mapBox[i].XPos, 0.0f, mapBox[i].ZPos);
 		mapBox[i].worldModel->Scale(15.0f);
-		mapBox[i].xSize = 15.0f;
-		mapBox[i].ySize = 22.5f;
-		mapBox[i].zSize = 15.0f;
 	}
 
 	// creates the models for the targets.
@@ -325,6 +323,8 @@ void main()
 	{
 
 		//flashBlind->MoveX(-frameTime * 20);
+
+		particleMain(myEngine, frameTime, cMatrix[2][1], cMatrix[2][1], cMatrix[2][1]);
 
 		myPlayer.timers(frameTime, myEngine);
 
@@ -434,6 +434,24 @@ void main()
 			currentWeapon = desertEagle;					// sets the current weapon to be the Desert Eagle
 			currentWeapon.currentWeaponState = active;	// sets the current weapon to active
 			currentWeapon.weaponModel->SetY(10.0f);			// moves the current weapon to the correct position
+		}
+		if (myEngine->KeyHit(kWeapon3Key)) // sets the players weapon to the Desert Eagle
+		{
+			currentActiveWeapon = confettiCannonWeapon; // sets the current active weapon enum to be the Desert Eagle
+
+			float tempx = currentWeapon.weaponModel->GetX();
+			float tempy = currentWeapon.weaponModel->GetY();
+			float tempz = currentWeapon.weaponModel->GetZ();
+
+			currentWeapon.currentWeaponState = inactive;	// sets the previously equipped weapon to be inactive
+			currentWeapon.weaponModel->SetY(-10.0f);			// hides the previous weapon
+			currentWeapon = confettiCannon;					// sets the current weapon to be the Desert Eagle
+			currentWeapon.currentWeaponState = active;	// sets the current weapon to active
+			//currentWeapon.weaponModel->SetY(10.0f);			// moves the current weapon to the correct position
+			currentWeapon.weaponModel->SetPosition(myPlayer.playerDummy->GetX(), myPlayer.playerDummy->GetY(), myPlayer.playerDummy->GetZ());
+			currentWeapon.weaponModel->SetLocalX(2.0f);
+			currentWeapon.weaponModel->SetLocalY(10.0f);
+			currentWeapon.weaponModel->SetLocalZ(7.0f);
 		}
 
 
@@ -598,10 +616,20 @@ void main()
 			myPlayer.currentPlayerState = notPlaying;
 
 		}
-	
+		if (myEngine->KeyHeld(kFireKey) && currentActiveWeapon == confettiCannonWeapon)
+		{
+			myPlayer.playerDummy->GetMatrix(&pMatrix[0][0]); // calls the matrix for the player, recording both the facing vector and the world position
+			myPlayer.myCamera->cameraDummy->GetMatrix(&cMatrix[0][0]); // calls the matrix for the camera, recording both the facing vector and the world position
+
+			facingVector = { pMatrix[2][0], cMatrix[2][1], pMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
+			lengthOfFV = sqrt((pMatrix[2][0] * pMatrix[2][0]) + (cMatrix[2][1] * cMatrix[2][1]) + (pMatrix[2][2] * pMatrix[2][2])); // calculates the  length of the facing vector
+			fvNormal = { pMatrix[2][0] / lengthOfFV, cMatrix[2][1] / lengthOfFV, pMatrix[2][2] / lengthOfFV };	// normalizes the facing vector for use in the ray cast
+
+			EmitParticle(quadMesh, confettiCannon.weaponModel->GetX() + (5.0f * fvNormal.x), confettiCannon.weaponModel->GetY(), confettiCannon.weaponModel->GetZ() + (5.0f * fvNormal.z), fvNormal);
+		}
 
 		// for automatic fire weapons
-		if (myEngine->KeyHeld(kFireKey) && currentWeapon.fireRateTimer <= 0.0f && currentWeapon.autofireEnabled == true)		//////////////////////// automatic firing
+		if (myEngine->KeyHeld(kFireKey) && currentWeapon.fireRateTimer <= 0.0f && currentWeapon.autofireEnabled == true && currentActiveWeapon != confettiCannonWeapon)		//////////////////////// automatic firing
 		{
 			currentWeapon.fireRateTimer = currentWeapon.fireRate; // sets the fire rate timer to the value of the current weapons fire rate
 
@@ -625,6 +653,8 @@ void main()
 
 				dummyPosition = { pMatrix[3][0], pMatrix[3][1], pMatrix[3][2] }; // gets the players position in the world
 
+
+
 				bulletTracerSelection = (bulletTracerSelection + 1) % kNumBulletTracers; // updates the bullet tracer to choose the next one in the array
 
 				bool wallHit = false;
@@ -642,23 +672,23 @@ void main()
 					myPlayer.raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets, myPlayer);
 				}
 
-				myPlayer.raycastBox(fvNormal, dummyPosition, mapBox, bulletTracer[bulletTracerSelection], numberOfBoxes, myPlayer);
-
 				currentWeapon.animationTimer = 0.1f;	// sets the weapons animation timer to 0.1 seconds
-				soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
 				
-				currentWeapon.ammo -= 1;   // removes 1 bullet from the ammo clip
-				bullet[currentBullet].SetPosition(currentWeapon.weaponModel->GetX(), currentWeapon.weaponModel->GetY(), currentWeapon.weaponModel->GetZ(), currentBullet);
+
+				if (currentActiveWeapon != confettiCannonWeapon)
+				{
+					soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
+					currentWeapon.ammo -= 1;   // removes 1 bullet from the ammo clip
+					bullet[currentBullet].SetPosition(currentWeapon.weaponModel->GetX(), currentWeapon.weaponModel->GetY(), currentWeapon.weaponModel->GetZ(), currentBullet);
+				}
 			}
 			if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && highScoreDisplay == true)
 			{
-				
 				highScoreDisplay = false;
 				highScoreBox->SetSkin("highScoresOff.jpg");
 			}
 			else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
 			{
-				helpDisplay = false;
 				highScoreDisplay = true;
 				highScoreBox->SetSkin("highScoresOn.jpg");
 			}
@@ -703,7 +733,6 @@ void main()
 			}
 			if (myPlayer.raycastMenu(fvNormal, dummyPosition, helpBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && helpDisplay == false)
 			{
-				highScoreDisplay = false;
 				helpBox->SetSkin("help.jpg");
 				helpDisplay = true;
 			}
@@ -751,6 +780,7 @@ void main()
 		{
 			M4Colt.ammo = currentWeapon.ammo; // updates the weapons ammo
 			weaponAnimation(currentWeapon.animationTimer, currentWeapon.weaponModel, myPlayer.playerDummy, frameTime); // plays the recoil animation for the M4Colt
+			//M4Colt.weaponModel->SetSkin("hyperbeast.png");
 		}
 		else if (currentActiveWeapon == desertEagleWeapon)  // checks if the players current weapon is the Desert Eagle
 		{
@@ -811,7 +841,10 @@ void main()
 					mapTarget[i].hostage = false;  // sets the target to enemy
 					mapTarget[i].resetTimer = 0.0f; // sets the reset timer to 0
 				}
+				
 				mapTarget[i].currentTargetState = ready;
+
+				
 
 			}
 			else if (mapTarget[i].currentTargetState == waiting && mapTarget[i].resetTimer > 0) // checks if the target is waiting and if the reset timer is above 0
@@ -929,130 +962,4 @@ void main()
 	myEngine->Delete();
 }
 
-//void shoot(CPlayer myPlayer, CWeapon currentWeapon, activeWeapon currentActiveWeapon, float time, float startTime)
-//{
-//	if (currentWeapon.ammo <= 0 && currentWeapon.currentWeaponState != reloading) // checks if the current ammo clip is empty, and that the player is not already reloading
-//	{
-//		soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
-//
-//		currentWeapon.currentWeaponState = reloading; // sets the state of the current weapon to reloading
-//		currentWeapon.reloadTimer = 0.0f;			 // sets the reload timer to 0
-//	}
-//	if (currentWeapon.currentWeaponState == active)  // checks if the players weapon is active
-//	{
-//		myPlayer.playerDummy->GetMatrix(&pMatrix[0][0]); // calls the matrix for the player, recording both the facing vector and the world position
-//		myPlayer.myCamera->cameraDummy->GetMatrix(&cMatrix[0][0]); // calls the matrix for the camera, recording both the facing vector and the world position
-//
-//		facingVector = { pMatrix[2][0], cMatrix[2][1], pMatrix[2][2] }; // calculates the players facing vector using the information from the matricies
-//		lengthOfFV = sqrt((pMatrix[2][0] * pMatrix[2][0]) + (cMatrix[2][1] * cMatrix[2][1]) + (pMatrix[2][2] * pMatrix[2][2])); // calculates the  length of the facing vector
-//		fvNormal = { pMatrix[2][0] / lengthOfFV, cMatrix[2][1] / lengthOfFV, pMatrix[2][2] / lengthOfFV };	// normalizes the facing vector for use in the ray cast
-//
-//		dummyPosition = { pMatrix[3][0], pMatrix[3][1], pMatrix[3][2] }; // gets the players position in the world
-//
-//		bulletTracerSelection = (bulletTracerSelection + 1) % kNumBulletTracers; // updates the bullet tracer to choose the next one in the array
-//
-//		bool wallHit = false;
-//		if (mapName == "Map1.txt") // checks if the first map is being played, as this is the only one containing walls
-//		{
-//			if (mapWall.size() != 0)
-//			{
-//				// runs a ray cast to see if the bullet has hit a wall, which are not penetratable
-//				wallHit = myPlayer.raycastWall(fvNormal, dummyPosition, mapWall, bulletTracer[bulletTracerSelection], numberOfTargets, numberOfWalls);
-//			}
-//		}
-//		if (!wallHit) // if no wall was hit, run the ray cast again to see if a target was hit
-//		{
-//			myPlayer.raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets, myPlayer);
-//			//raycastShoot(fvNormal, dummyPosition, mapTarget, bulletTracer[bulletTracerSelection], numberOfTargets);
-//		}
-//
-//		soundMain(currentActiveWeapon, currentWeapon.ammo, currentWeapon.currentWeaponState, myPlayer.mSoundEnabled);
-//
-//		currentWeapon.ammo -= 1; // removes 1 bullet from the ammo clip
-//		currentWeapon.animationTimer = 0.1f;	// sets the weapons animation timer to 0.1 seconds
-//	}
-//
-//	if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && highScoreDisplay == true)
-//	{
-//		highScoreDisplay = false;
-//		highScoreBox->SetSkin("highScoresOff.jpg");
-//	}
-//	else if (myPlayer.raycastMenu(fvNormal, dummyPosition, highScoreBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
-//	{
-//		highScoreDisplay = true;
-//		highScoreBox->SetSkin("highScoresOn.jpg");
-//	}
-//
-//	if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == playing)
-//	{
-//		time = startTime;
-//		myPlayer.currentPlayerState = notPlaying;
-//		startBox->SetSkin("startOn.jpg");
-//	}
-//	else if (myPlayer.raycastMenu(fvNormal, dummyPosition, startBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying)
-//	{
-//		// set timer to 2 minutes
-//		// set score to 0
-//		myPlayer.currentPlayerState = playing;
-//		time = startTime;
-//		myPlayer.score = 0;
-//		startBox->SetSkin("startOff.jpg");
-//	}
-//	if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeUpBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime < MAXSTARTTIME)
-//	{
-//		startTime += 60.0f;
-//		time = startTime;
-//
-//	}
-//	else if (myPlayer.raycastMenu(fvNormal, dummyPosition, timeDownBox, bulletTracer[bulletTracerSelection], myPlayer, HALFMENUBLOCKY) && myPlayer.currentPlayerState == notPlaying && startTime > MINSTARTTIME)
-//	{
-//		startTime -= 60.0f;
-//		time = startTime;
-//	}
-//	if (myPlayer.raycastMenu(fvNormal, dummyPosition, soundBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.mSoundEnabled == false)
-//	{
-//		soundBox->SetSkin("soundOn.jpg");
-//		myPlayer.mSoundEnabled = true;
-//
-//	}
-//	else if (myPlayer.raycastMenu(fvNormal, dummyPosition, soundBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && myPlayer.mSoundEnabled == true)
-//	{
-//		soundBox->SetSkin("soundOff.jpg");
-//		myPlayer.mSoundEnabled = false;
-//
-//	}
-//	if (myPlayer.raycastMenu(fvNormal, dummyPosition, helpBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && helpDisplay == false)
-//	{
-//		helpBox->SetSkin("help.jpg");
-//		helpDisplay = true;
-//	}
-//	else if (myPlayer.raycastMenu(fvNormal, dummyPosition, helpBox, bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY) && helpDisplay == true)
-//	{
-//		helpBox->SetSkin("helpOff.jpg");
-//		helpDisplay = false;
-//	}
-//	for (int i = 0; i < kNumNameBoxes; i++)
-//	{
-//		if (myPlayer.raycastName(fvNormal, dummyPosition, leftScrollBox[i], bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
-//		{
-//			letterSelect[i] = previousInArray(letterSelect[i], 26);
-//			char boxChar = (char)(letterSelect[i] + 65);
-//
-//			string letterFile = "letter";
-//			letterFile.push_back(boxChar);
-//			letterFile = letterFile + ".jpg";
-//			nameBox[i]->SetSkin(letterFile);
-//		}
-//		if (myPlayer.raycastName(fvNormal, dummyPosition, rightScrollBox[i], bulletTracer[bulletTracerSelection], myPlayer, FULLMENUBLOCKY))
-//		{
-//			letterSelect[i] = nextInArray(letterSelect[i], 26);
-//			char boxChar = (char)(letterSelect[i] + 65);
-//
-//			string letterFile = "letter";
-//			letterFile.push_back(boxChar);
-//			letterFile = letterFile + ".jpg";
-//			nameBox[i]->SetSkin(letterFile);
-//		}
-//
-//	}
-//}
+
