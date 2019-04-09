@@ -44,7 +44,7 @@ void CTarget::createTarget(I3DEngine* myEngine, string meshName, const int numbe
 		worldModel->ScaleY(1.2f);
 		worldModel->ScaleX(1.2f);
 		worldModel->ScaleZ(0.2f);
-		worldModel->SetSkin("robber.png"); // skins the target to look like a robber (enemy)
+		worldModel->SetSkin("robber.jpg"); // skins the target to look like a robber (enemy)
 
 		currentTargetState = waiting; // sets the state of the target to waiting
 		resetTimer = 0;			   // sets the reset timer to 0
@@ -128,7 +128,7 @@ void CTarget::updateTarget(CPlayer &myPlayer, float frameTime, const int numberO
 		}
 		else
 		{
-			worldModel->SetSkin("robber.png");  // sets the skin to show a robber
+			worldModel->SetSkin("robber.jpg");  // sets the skin to show a robber
 		}
 
 	}
