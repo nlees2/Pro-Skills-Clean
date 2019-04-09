@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ProgramData\TL-Engine\include;D:\NAPoole\Desktop\Pro-Skills-Clean-master\SFML-2.5.1\include;Import;Import\Common;Import\Math;C:\Program Files %28x86%29\Windows Kits\8.1\Include;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ProgramData\TL-Engine\include;D:\NAPoole\Desktop\Pro-Skills-Clean-master\SFML-2.5.1\include;Import;Import\Common;Import\Math;C:\Program Files %28x86%29\Windows Kits\8.1\Include;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary;D:\NAPoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <PrecompiledHeader>
@@ -77,7 +77,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\ProgramData\TL-Engine\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary;D:\NAPoole\Desktop\Pro-Skills-Clean-master\SFML-2.5.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\ProgramData\TL-Engine\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary;D:\NAPoole\Desktop\Pro-Skills-Clean-master\SFML-2.5.1\lib;D:\NAPoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\lib</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)pro skills.pdb</ProgramDatabaseFile>
       <DataExecutionPrevention>
@@ -96,7 +96,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ProgramData\TL-Engine\include;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\include;Import;Import\Common;Import\Math;C:\Program Files %28x86%29\Windows Kits\8.1\Include;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ProgramData\TL-Engine\include;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\include;Import;Import\Common;Import\Math;C:\Program Files %28x86%29\Windows Kits\8.1\Include;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary;D:\NAPoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -108,7 +108,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
       <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\ProgramData\TL-Engine\lib;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\ProgramData\TL-Engine\lib;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Users\Nick\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\ParticleLibrary\ParticleLibrary;D:\NAPoole\Desktop\Pro-Skills-Clean-flashbangs-and-stuff\SFML-2.5.1\lib</AdditionalLibraryDirectories>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <DataExecutionPrevention>

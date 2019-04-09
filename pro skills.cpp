@@ -43,6 +43,7 @@ void main()
 	CWeapon desertEagle;
 	CWeapon currentWeapon;
 	CWeapon confettiCannon;
+	bool confettiFiring = false;
 
 	CPlayer myPlayer(frameTime, myEngine);
 	myPlayer.currentPlayerState = notPlaying;
@@ -226,6 +227,7 @@ void main()
 	int letterSelect[kNumNameBoxes]{ 0,0,0,0 };
 
 	M4Colt.createWeapon(myEngine, 20, true, 0.15f, active, "M4Colt.x", myPlayer, 10.0f);
+	M4Colt.weaponModel->SetSkin("howl.png");
 	desertEagle.createWeapon(myEngine, 7, false, 0.15f, inactive, "Desert_Eagle.x", myPlayer, -10.0f);
 	confettiCannon.createWeapon(myEngine, 1, true, 0.15f, inactive, "M4Colt.x", myPlayer, -10.0f);
 
@@ -324,7 +326,7 @@ void main()
 
 		//flashBlind->MoveX(-frameTime * 20);
 
-		particleMain(myEngine, frameTime, cMatrix[2][1], cMatrix[2][1], cMatrix[2][1]);
+		particleMain(myEngine, quadMesh, frameTime, cMatrix[2][1], cMatrix[2][1], cMatrix[2][1]);
 
 		myPlayer.timers(frameTime, myEngine);
 
@@ -419,6 +421,8 @@ void main()
 		{
 			currentActiveWeapon = M4ColtWeapon; // sets the current active weapon enum to be the M4Colt
 
+			
+
 			currentWeapon.currentWeaponState = inactive; // sets the previously equipped weapon to be inactive
 			currentWeapon.weaponModel->SetY(-10.0f);			// hides the previous weapon
 			currentWeapon = M4Colt;						// sets the current weapon to be the M4Colt
@@ -442,6 +446,8 @@ void main()
 			float tempx = currentWeapon.weaponModel->GetX();
 			float tempy = currentWeapon.weaponModel->GetY();
 			float tempz = currentWeapon.weaponModel->GetZ();
+
+			confettiCannon.weaponModel->SetSkin("rainbow.png");
 
 			currentWeapon.currentWeaponState = inactive;	// sets the previously equipped weapon to be inactive
 			currentWeapon.weaponModel->SetY(-10.0f);			// hides the previous weapon
@@ -626,7 +632,14 @@ void main()
 			fvNormal = { pMatrix[2][0] / lengthOfFV, cMatrix[2][1] / lengthOfFV, pMatrix[2][2] / lengthOfFV };	// normalizes the facing vector for use in the ray cast
 
 			EmitParticle(quadMesh, confettiCannon.weaponModel->GetX() + (5.0f * fvNormal.x), confettiCannon.weaponModel->GetY(), confettiCannon.weaponModel->GetZ() + (5.0f * fvNormal.z), fvNormal);
+			
+			confettiFiring = true;
 		}
+		else
+		{
+			confettiFiring = false;
+		}
+		soundConfetti(confettiFiring, myPlayer.mSoundEnabled);
 
 		// for automatic fire weapons
 		if (myEngine->KeyHeld(kFireKey) && currentWeapon.fireRateTimer <= 0.0f && currentWeapon.autofireEnabled == true && currentActiveWeapon != confettiCannonWeapon)		//////////////////////// automatic firing

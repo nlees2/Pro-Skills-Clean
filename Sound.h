@@ -20,6 +20,8 @@ using namespace std;
 // Timer function prototype (code at bottom of file). Used for later exercises
 float Timer();
 
+bool confettiSoundLoaded = false;
+bool confettiSongPlaying = false;
 
 //****************
 // Globals
@@ -27,11 +29,13 @@ float Timer();
 // A "buffer" holds sound data, but the creation of a buffer on its own doesn't play a sound. It is the
 // equivalent of a mesh in the TL-Engine
 sf::SoundBuffer buffer;
+sf::SoundBuffer confettiBuffer;
 
 
 // A "sound" is an actual sound in the world. A sound must be associated with a buffer to indicate
 // which sound data to play. Sources are equivalent to models in the TL-Engine
 sf::Sound sound;
+sf::Sound confettiSound;
 
 // Each sound source has several properties, see the code for examples. Here we store position and 
 // velocity of the sound source above, using a SFML class Vector3f to hold the xyz values
@@ -195,6 +199,69 @@ void soundGrenade(bool flashSeen, bool soundEnabled)
 	  
 	  	sound.play();;
 	  
+	}
+}
+
+void soundConfetti(bool confettiFiring, bool soundEnabled)
+{
+	//****************
+	// Buffers
+
+	// Load a sound file into a sound buffer
+	// Supports WAV, OGG/Vorbis, FLAC only. Download Audacity (free) to convert other formats for use (use WAV or OGG)
+
+	
+	if (soundEnabled == true)
+	{
+
+		if (confettiSoundLoaded == false)
+		{
+			if (!confettiBuffer.loadFromFile("confettiMusic.wav"))
+			{
+				cout << "Error loading sound file" << endl;
+				while (!_kbhit());
+				return;
+			}
+
+			confettiSoundLoaded = true;
+
+
+			//****************
+			// Sources
+
+			// Indicate that our sound source will use the buffer we just loaded
+			confettiSound.setBuffer(confettiBuffer);
+
+			// Set the properties of the source. Details of all available properties are in the SFML documentation of the Sound class
+			confettiSound.setVolume(100.0f); // 0 to 100
+			confettiSound.setPitch(1.0f);
+			confettiSound.setPosition(soundPos);
+			confettiSound.setLoop(true);
+
+
+			//****************
+			// Listener
+
+			// Set the properties of the listener. These are all the available listener properties
+			// Note how this is doen with static member functions - there is no listener variable
+			sf::Listener::setGlobalVolume(100.0f); // 0 to 100
+			sf::Listener::setPosition(listenerPos);
+			sf::Listener::setDirection(listenerForward);
+			sf::Listener::setUpVector(listenerUp);
+
+		}
+
+		if (confettiFiring == true && confettiSongPlaying == false)
+		{
+			confettiSound.play();
+			confettiSongPlaying = true;
+
+		}
+		else if(confettiFiring == false && confettiSongPlaying == true)
+		{
+			confettiSongPlaying = false;
+			confettiSound.pause();
+		}
 	}
 }
 

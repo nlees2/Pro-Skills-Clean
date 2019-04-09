@@ -23,7 +23,7 @@ struct Particle
 	// Content to be added
 	vector3d position;
 	vector3d velocity;
-	colour3d colour;
+	//colour3d colour;
 	float life;
 	IModel* ParticleModel;
 };
@@ -42,7 +42,7 @@ float emitterRotation = 90.0f;
 bool emitterInFloor = false;
 
 
-void particleMain(I3DEngine* myEngine,float frameTime,  float weaponXPos, float weaponYPos, float weaponZPos)
+void particleMain(I3DEngine* myEngine, IMesh* particleMesh, float frameTime,  float weaponXPos, float weaponYPos, float weaponZPos)
 {
 	//IModel* sphere = sphereMesh-
 
@@ -67,7 +67,7 @@ void particleMain(I3DEngine* myEngine,float frameTime,  float weaponXPos, float 
 	// Further data / functions to be added here
 	vector3d origin = { 0.0f, 0.0f, 0.0f };
 
-	const float EMITTERINTERVAL = 0.01f; // labsheet says 0.001 (1000 per sec). program allows up to about 0.0003 (3333 per sec) before it starts lagging 
+	const float EMITTERINTERVAL = 0.001f; // labsheet says 0.001 (1000 per sec). program allows up to about 0.0003 (3333 per sec) before it starts lagging 
 	float emitterTimer = EMITTERINTERVAL;
 	float nectParticleCD = 0.05f;
 	const float GRAVITY = -30.0f;
@@ -136,7 +136,8 @@ void particleMain(I3DEngine* myEngine,float frameTime,  float weaponXPos, float 
 
 			if ((*itParticle).life < 0.0f)
 			{
-				(*itParticle).ParticleModel->~IModel();
+				particleMesh->RemoveModel((*itParticle).ParticleModel); // must delete models this way as the model is not unlinked from the mesh by calling the deconstructor, causing a crash
+			//	(*itParticle).ParticleModel->~IModel();
 				itParticle = Particles.erase(itParticle);
 			}
 			else
@@ -173,7 +174,10 @@ void EmitParticle(IMesh* particleMesh, float xPos, float yPos, float zPos, vecto
 	newParticle.ParticleModel = particleMesh->CreateModel(xPos, yPos, zPos);
 	newParticle.ParticleModel->Scale(0.1f);
 	
-	int colour = gen::Random(1, 10);
+	int colour = gen::Random(2, 10);
+
+	//newParticle.ParticleModel->SetSkin("aiden face.png");
+	//newParticle.ParticleModel->RotateZ(90.0f);
 
 	switch(colour){
 	
@@ -220,9 +224,9 @@ void EmitParticle(IMesh* particleMesh, float xPos, float yPos, float zPos, vecto
 
 	// for RGB
 
-	newParticle.colour.r = gen::Random(0.0f, 1.0f);
+	/*newParticle.colour.r = gen::Random(0.0f, 1.0f);
 	newParticle.colour.g = gen::Random(0.0f, 1.0f);
-	newParticle.colour.b = gen::Random(0.0f, 1.0f);
+	newParticle.colour.b = gen::Random(0.0f, 1.0f);*/
 
 	//// for blood
 
