@@ -21,7 +21,7 @@ void main()
 	int resolutionX = 1920; // X size of the game window
 	int resolutionY = 1080; // Y size of the game window
 
-	float frameTime = 1.0f;				 // frame time used to control game speed
+	float frameTime = 1.0f; // frame time used to control game speed
 
 							// Create a 3D engine (using TLX engine here) and open a window for it
 	I3DEngine* myEngine = New3DEngine(kTLX);
@@ -38,6 +38,7 @@ void main()
 	activeWeapon currentActiveWeapon = M4ColtWeapon;
 
 	vector<highScore> highScores;
+	string playerName;
 
 	CWeapon M4Colt;
 	CWeapon desertEagle;
@@ -172,7 +173,7 @@ void main()
 	IFont* highScoreFont = myEngine->LoadFont("Comic Sans MS", 80); // Declares the font and font size used when outputting text
 
 	float mouseMovement;				 // stores the players mouse movemnt
-	myEngine->StartMouseCapture();		 // starts mouse capture, removing the mouse curser and allowing the player full control of the game
+	
 
 	IMesh* floorMesh = myEngine->LoadMesh("ground.x");					//Mesh to set up the ground
 	IMesh* DummyMesh = myEngine->LoadMesh("Dummy.x");					// dummy mesh, used multiple times for both player and camera dummy
@@ -227,13 +228,16 @@ void main()
 	int letterSelect[kNumNameBoxes]{ 0,0,0,0 };
 
 	M4Colt.createWeapon(myEngine, 20, true, 0.15f, active, "M4Colt.x", myPlayer, 10.0f);
-	M4Colt.weaponModel->SetSkin("howl.png");
+	M4Colt.weaponModel->SetSkin("hyperBeast.png");
 	desertEagle.createWeapon(myEngine, 7, false, 0.15f, inactive, "Desert_Eagle.x", myPlayer, -10.0f);
+	desertEagle.weaponModel->SetSkin("desertEagle.png");
 	confettiCannon.createWeapon(myEngine, 1, true, 0.15f, inactive, "M4Colt.x", myPlayer, -10.0f);
+	confettiCannon.weaponModel->SetSkin("rainbow.png");
+
 
 	currentWeapon = M4Colt;	// Sets the players current weapon to the M4Colt
 
-	myEngine->Timer(); // calls the timer used for frame time
+	
 
 	 //reads in the map file
 	readMap(numberOfWalls, numberOfBoxes, numberOfTargets, numberOfWallBoxes, mapWall, mapWallBox, mapBox, mapTarget, mapName);
@@ -319,6 +323,9 @@ void main()
 			}
 		}
 	}
+
+	myEngine->Timer(); // calls the timer used for frame time
+	myEngine->StartMouseCapture();		 // starts mouse capture, removing the mouse curser and allowing the player full control of the game
 
 	// The main game loop, repeat until engine is stopped
 	while (myEngine->IsRunning())
@@ -439,7 +446,7 @@ void main()
 			currentWeapon.currentWeaponState = active;	// sets the current weapon to active
 			currentWeapon.weaponModel->SetY(10.0f);			// moves the current weapon to the correct position
 		}
-		if (myEngine->KeyHit(kWeapon3Key)) // sets the players weapon to the Desert Eagle
+		if (myEngine->KeyHit(kWeapon3Key)/* && playerName == "CNFT" */) // sets the players weapon to the Desert Eagle
 		{
 			currentActiveWeapon = confettiCannonWeapon; // sets the current active weapon enum to be the Desert Eagle
 
@@ -447,7 +454,7 @@ void main()
 			float tempy = currentWeapon.weaponModel->GetY();
 			float tempz = currentWeapon.weaponModel->GetZ();
 
-			confettiCannon.weaponModel->SetSkin("rainbow.png");
+			//confettiCannon.weaponModel->SetSkin("rainbow.png");
 
 			currentWeapon.currentWeaponState = inactive;	// sets the previously equipped weapon to be inactive
 			currentWeapon.weaponModel->SetY(-10.0f);			// hides the previous weapon
@@ -458,18 +465,19 @@ void main()
 			currentWeapon.weaponModel->SetLocalX(2.0f);
 			currentWeapon.weaponModel->SetLocalY(10.0f);
 			currentWeapon.weaponModel->SetLocalZ(7.0f);
+
 		}
 
+		playerName.clear();
+		for (int i = kNumNameBoxes - 1; i >= 0; i--)
+		{
+			playerName.push_back((char)(letterSelect[i] + 65));
+		}
 
 		if (myEngine->KeyHit(kQuitKey)) //Quits the game
 		{
 			if (myPlayer.currentPlayerState == playing)
 			{
-				string playerName;
-				for (int i = kNumNameBoxes - 1; i >= 0; i--)
-				{
-					playerName.push_back((char)(letterSelect[i] + 65));
-				}
 				myPlayer.SaveHighScore(highScores, myPlayer, startTime - time, playerName);
 			}
 			myEngine->Stop();

@@ -122,7 +122,7 @@ void particleMain(I3DEngine* myEngine, IMesh* particleMesh, float frameTime,  fl
 			emitter = { 0.0f, 50.0f, 0.0f };
 
 			// for making the particles bounce
-		/*	if ((*itParticle).ParticleModel->GetY() < 0)
+			/*if ((*itParticle).ParticleModel->GetY() < 0)
 			{
 			(*itParticle).velocity = { (*itParticle).velocity.x, -((*itParticle).velocity.y) * 0.8f, (*itParticle).velocity.z };
 			}*/
