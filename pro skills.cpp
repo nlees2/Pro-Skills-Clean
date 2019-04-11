@@ -21,7 +21,7 @@ void main()
 	int resolutionX = 1920; // X size of the game window
 	int resolutionY = 1080; // Y size of the game window
 
-	float frameTime = 1.0f; // frame time used to control game speed
+	float frameTime = 1.0f;				 // frame time used to control game speed
 
 							// Create a 3D engine (using TLX engine here) and open a window for it
 	I3DEngine* myEngine = New3DEngine(kTLX);
@@ -38,7 +38,6 @@ void main()
 	activeWeapon currentActiveWeapon = M4ColtWeapon;
 
 	vector<highScore> highScores;
-	string playerName;
 
 	CWeapon M4Colt;
 	CWeapon desertEagle;
@@ -94,7 +93,7 @@ void main()
 	bool boxHit = false; // bool to measure if the player has shot a box
 	float pMatrix[4][4];	 // matrix used to store the player models information to be passed to functions such as facing vector and world location
 	float cMatrix[4][4];	 // matrix used to store the camera models information to be passed to functions such as facing vector and world location
-	float gMatrix[4][4];	 // matrix used to store the grenade models information to be passed to functions such as facing vector and world location
+	float dMatrix[4][4];	 // matrix used to store the grenade models information to be passed to functions such as facing vector and world location
 
 	stringstream scoreText; // screen score output
 	stringstream ammoText; // screen ammo output
@@ -173,7 +172,7 @@ void main()
 	IFont* highScoreFont = myEngine->LoadFont("Comic Sans MS", 80); // Declares the font and font size used when outputting text
 
 	float mouseMovement;				 // stores the players mouse movemnt
-	
+	myEngine->StartMouseCapture();		 // starts mouse capture, removing the mouse curser and allowing the player full control of the game
 
 	IMesh* floorMesh = myEngine->LoadMesh("ground.x");					//Mesh to set up the ground
 	IMesh* DummyMesh = myEngine->LoadMesh("Dummy.x");					// dummy mesh, used multiple times for both player and camera dummy
@@ -200,6 +199,7 @@ void main()
 	IModel* helpBox = cubeMesh->CreateModel(40.0f, 5.0f, 54.0f);
 	IModel* aidenBox = cubeMesh->CreateModel(45.0f, 8.0f, -50.0f);
 	IModel* flashEffect = quadMesh->CreateModel(0.0f, 0.0f, 0.0f);
+	IModel* barrelDummy = DummyMesh->CreateModel(0.0f, 0.0f, 0.0f);
 
 	flashEffect->ScaleX(20.0f);
 	flashEffect->AttachToParent(myPlayer.myCamera->cameraDummy);
@@ -228,16 +228,16 @@ void main()
 	int letterSelect[kNumNameBoxes]{ 0,0,0,0 };
 
 	M4Colt.createWeapon(myEngine, 20, true, 0.15f, active, "M4Colt.x", myPlayer, 10.0f);
-	M4Colt.weaponModel->SetSkin("hyperBeast.png");
+	M4Colt.weaponModel->SetSkin("howl.png");
+	barrelDummy->SetPosition(1.5f, 10.0f, 11.0f);
+	barrelDummy->AttachToParent(myPlayer.myCamera->cameraDummy);
+	//barrelDummy->MoveLocalZ(5.0f);
 	desertEagle.createWeapon(myEngine, 7, false, 0.15f, inactive, "Desert_Eagle.x", myPlayer, -10.0f);
-	desertEagle.weaponModel->SetSkin("desertEagle.png");
 	confettiCannon.createWeapon(myEngine, 1, true, 0.15f, inactive, "M4Colt.x", myPlayer, -10.0f);
-	confettiCannon.weaponModel->SetSkin("rainbow.png");
-
 
 	currentWeapon = M4Colt;	// Sets the players current weapon to the M4Colt
 
-	
+	myEngine->Timer(); // calls the timer used for frame time
 
 	 //reads in the map file
 	readMap(numberOfWalls, numberOfBoxes, numberOfTargets, numberOfWallBoxes, mapWall, mapWallBox, mapBox, mapTarget, mapName);
@@ -287,7 +287,7 @@ void main()
 		mapTarget[i].robberTarget->ScaleY(1.2f);
 		mapTarget[i].robberTarget->ScaleX(1.2f);
 		mapTarget[i].robberTarget->ScaleZ(0.2f);
-		mapTarget[i].robberTarget->SetSkin("robber.jpg"); // skins the target to look like a robber (enemy)
+		mapTarget[i].robberTarget->SetSkin("robber.png"); // skins the target to look like a robber (enemy)
 
 		mapTarget[i].currentTargetState = waiting; // sets the state of the target to waiting
 		mapTarget[i].resetTimer = 0;			   // sets the reset timer to 0
@@ -323,9 +323,6 @@ void main()
 			}
 		}
 	}
-
-	myEngine->Timer(); // calls the timer used for frame time
-	myEngine->StartMouseCapture();		 // starts mouse capture, removing the mouse curser and allowing the player full control of the game
 
 	// The main game loop, repeat until engine is stopped
 	while (myEngine->IsRunning())
@@ -446,7 +443,7 @@ void main()
 			currentWeapon.currentWeaponState = active;	// sets the current weapon to active
 			currentWeapon.weaponModel->SetY(10.0f);			// moves the current weapon to the correct position
 		}
-		if (myEngine->KeyHit(kWeapon3Key)/* && playerName == "CNFT" */) // sets the players weapon to the Desert Eagle
+		if (myEngine->KeyHit(kWeapon3Key)) // sets the players weapon to the Desert Eagle
 		{
 			currentActiveWeapon = confettiCannonWeapon; // sets the current active weapon enum to be the Desert Eagle
 
@@ -454,7 +451,7 @@ void main()
 			float tempy = currentWeapon.weaponModel->GetY();
 			float tempz = currentWeapon.weaponModel->GetZ();
 
-			//confettiCannon.weaponModel->SetSkin("rainbow.png");
+			confettiCannon.weaponModel->SetSkin("rainbow.png");
 
 			currentWeapon.currentWeaponState = inactive;	// sets the previously equipped weapon to be inactive
 			currentWeapon.weaponModel->SetY(-10.0f);			// hides the previous weapon
@@ -465,19 +462,18 @@ void main()
 			currentWeapon.weaponModel->SetLocalX(2.0f);
 			currentWeapon.weaponModel->SetLocalY(10.0f);
 			currentWeapon.weaponModel->SetLocalZ(7.0f);
-
 		}
 
-		playerName.clear();
-		for (int i = kNumNameBoxes - 1; i >= 0; i--)
-		{
-			playerName.push_back((char)(letterSelect[i] + 65));
-		}
 
 		if (myEngine->KeyHit(kQuitKey)) //Quits the game
 		{
 			if (myPlayer.currentPlayerState == playing)
 			{
+				string playerName;
+				for (int i = kNumNameBoxes - 1; i >= 0; i--)
+				{
+					playerName.push_back((char)(letterSelect[i] + 65));
+				}
 				myPlayer.SaveHighScore(highScores, myPlayer, startTime - time, playerName);
 			}
 			myEngine->Stop();
@@ -639,8 +635,14 @@ void main()
 			lengthOfFV = sqrt((pMatrix[2][0] * pMatrix[2][0]) + (cMatrix[2][1] * cMatrix[2][1]) + (pMatrix[2][2] * pMatrix[2][2])); // calculates the  length of the facing vector
 			fvNormal = { pMatrix[2][0] / lengthOfFV, cMatrix[2][1] / lengthOfFV, pMatrix[2][2] / lengthOfFV };	// normalizes the facing vector for use in the ray cast
 
-			EmitParticle(quadMesh, confettiCannon.weaponModel->GetX() + (5.0f * fvNormal.x), confettiCannon.weaponModel->GetY(), confettiCannon.weaponModel->GetZ() + (5.0f * fvNormal.z), fvNormal);
+			float testX = confettiCannon.weaponModel->GetX();
+			float testY = myPlayer.myCamera->cameraDummy->GetY();
+			float testZ = confettiCannon.weaponModel->GetZ();
+
+			//EmitParticle(quadMesh, confettiCannon.weaponModel->GetX() + (5.0f * fvNormal.x), confettiCannon.weaponModel->GetY() + (6.0f * facingVector.y), confettiCannon.weaponModel->GetZ() + (5.0f * fvNormal.z), fvNormal);
 			
+			EmitParticle(quadMesh, barrelDummy->GetX(), barrelDummy->GetY(), barrelDummy->GetZ(), fvNormal);
+
 			confettiFiring = true;
 		}
 		else
@@ -892,7 +894,7 @@ void main()
 			}
 			else
 			{
-				mapTarget[i].robberTarget->SetSkin("robber.jpg");  // sets the skin to show a robber
+				mapTarget[i].robberTarget->SetSkin("robber.png");  // sets the skin to show a robber
 			}
 
 		}

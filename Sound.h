@@ -231,7 +231,7 @@ void soundConfetti(bool confettiFiring, bool soundEnabled)
 
 			// Indicate that our sound source will use the buffer we just loaded
 			confettiSound.setBuffer(confettiBuffer);
-
+			
 			// Set the properties of the source. Details of all available properties are in the SFML documentation of the Sound class
 			confettiSound.setVolume(100.0f); // 0 to 100
 			confettiSound.setPitch(1.0f);
